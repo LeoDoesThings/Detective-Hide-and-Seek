@@ -27,7 +27,7 @@ def main():
 |                              Please resize your terminal window                             |
 |                           so you can see the border on all sides                            |
 |                                                                                             |
-|                                     Press enter to play                                     |
+|                                Press \033[1menter\033[0m to start the game                                |
 |                                                                                             |
 |                                                                                             |
 |                                                                                             |
@@ -37,7 +37,8 @@ def main():
 |                                                                                             |
 |_____________________________________________________________________________________________|
     """)
-    tutorial_yesno = input("""
+    while True:
+        tutorial_yesno = input("""
 ===============================================================================================
                 ________              
              .-'        `-.           
@@ -45,7 +46,7 @@ def main():
           /                  \        
          ;                   ;`                      
          |                   |;                
-         ;                   ;|                      \033[95m Welcome to \033[0m
+         ;                   ;|                       Welcome to
          '\                 / ;                \033[1m Detective Hide and Seek \033[0m
           \`.             .' /        
            `.`-.______.-' .'         
@@ -61,9 +62,12 @@ def main():
     / / /
     \/_/
 ===============================================================================================
-    """)
+        """)
+        if tutorial_yesno[0].upper() == "Y" or tutorial_yesno[0].upper() == "N":
+            break
+            
     if tutorial_yesno[0].upper() == "Y":
-        print("tutorial")
+        print("your mum")
     
 
 
