@@ -54,7 +54,7 @@ def showTutorial():
 def main():
     try:
         from blessed import Terminal
-    except ImportError:
+    except ImportError: # If blessed is not installed, tell user how to install.
         print("================================\nYou don't have blessed installed!\n\nPlease run \n`pip install blessed` on Windows or \n`pip3 install blessed` on Mac\n================================")
         exit()
 
@@ -106,5 +106,5 @@ def main():
 
 
 if __name__ == "__main__":
-    """ This is executed when run from the command line """
+    # This is executed when run from the command line
     main()
