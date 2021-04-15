@@ -26,7 +26,7 @@ class Clues:
     cafe3 = 'some liquid on the ground'
     cafe4 = 'some drops on the ground'
 
-    house1 = 'a bag on the ground
+    house1 = 'a bag on the ground'
     house2 = 'a wallet on the ground'
     house3 = 'a book on the ground'
     house4 = cafe4
@@ -42,6 +42,7 @@ class Clues:
     garden2 = forest3
     garden3 = forest2
     garden4 = cafe3
+    garden5 = forest4
 
 class Application(tk.Frame):
     def __init__(self, master=None):
