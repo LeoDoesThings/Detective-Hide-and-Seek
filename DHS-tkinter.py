@@ -2,7 +2,7 @@ import tkinter as tk
 
 
 class Locations:
-    locations = ['forest', 'park', 'cafe', 'house', 'school', 'garden', 'chapel']
+    locations = ['forest', 'park', 'cafe', 'house', 'school', 'garden']
     searched = []
 
     def location_searched(self, location):
@@ -38,15 +38,10 @@ class Clues:
     school4 = house2
     school5 = house5
 
-    garden1 = 'some gardening gloves on the ground'
-    garden2 = 'a stick on the ground'
+    garden1 = park4
+    garden2 = forest3
     garden3 = forest2
-    garden4 = ''
-
-    chapel1 = 'a rosary on the ground'
-    chapel2 = school1
-    chapel3 = ''
-    chapel4 = ''
+    garden4 = cafe3
 
 class Application(tk.Frame):
     def __init__(self, master=None):
