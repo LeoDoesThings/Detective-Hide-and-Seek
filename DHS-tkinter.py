@@ -1,4 +1,5 @@
 import tkinter as tk
+import random
 
 
 class Locations:
@@ -8,43 +9,68 @@ class Locations:
     def location_searched(self, location):
         self.searched.append(location)
 
+
 class Clues:
     seen = []
 
-    forest1 = 'You notice a muddy footprint on the ground...'
-    forest2 = 'some dirt on the pavement'
-    forest3 = 'a stick on the ground'
-    forest4 = 'a leaf blowing past you'
+    forest = [
+        "You notice a muddy footprint on the ground...",
+        "some dirt on the pavement",
+        "a stick on the ground",
+        "a leaf blowing past you",
+        "a shoelace on the ground"
+    ]
 
-    park1 = 'a branch on the ground'
-    park2 = forest3
-    park3 = forest2
-    park4 = 'some gardening gloves on the ground'
+    park = [
+        "a branch on the ground",
+        "some gardening gloves on the ground",
+        forest[1],
+        forest[2],
+        forest[4]
+    ]
 
-    cafe1 = 'a coffee cup on the ground'
-    cafe2 = 'a lid on the ground'
-    cafe3 = 'some liquid on the ground'
-    cafe4 = 'some drops on the ground'
+    cafe = [
+        "a coffee cup on the ground",
+        "a lid on the ground",
+        "some liquid on the ground",
+        "some drops on the ground",
+        forest[4]
+    ]
 
-    house1 = 'a bag on the ground'
-    house2 = 'a wallet on the ground'
-    house3 = 'a book on the ground'
-    house4 = cafe4
-    house5 = 'an HP laptop charger on the ground'
+    house = [
+        "a bag on the ground",
+        "a wallet on the ground",
+        "a book on the ground",
+        cafe[3],
+        "an HP laptop charger on the ground"
+    ]
 
-    school1 = house3
-    school2 = house1
-    school3 = cafe3
-    school4 = house2
-    school5 = house5
+    school [
+        house[2],
+        house[0],
+        cafe[2],
+        house[1],
+        house[4]
+    ]
 
-    garden1 = park4
-    garden2 = forest3
-    garden3 = forest2
-    garden4 = cafe3
-    garden5 = forest4
+    garden = [
+        park[3],
+        forest[2],
+        forest[1],
+        cafe[2],
+        forest[3]
+    ]
 
-class Application(tk.Frame):
+
+class Game:
+    difficulty = 1
+
+    def getHidingPlace():
+        hidingplace = random.choice(Locations.locations)
+        print(hidingplace)
+
+
+class App(tk.Frame):
     def __init__(self, master=None):
         super().__init__(master)
         self.master = master
@@ -60,6 +86,11 @@ class Application(tk.Frame):
         main_title_label.place()
         main_title_label.pack(side="top")
 
+        start_button = tk.Button(
+            text="Start", command=Game.getHidingPlace).pack(side="bottom")
+        test_button = tk.Button(
+            text="testing button", command=print(Clues.park[3])).pack(side="bottom")
+
 
 root = tk.Tk()
 root.title('Detective Hide and Seek')
@@ -69,12 +100,12 @@ root.geometry('853x480')
 # Gets the requested values of the height and width
 windowWidth = root.winfo_reqwidth()
 windowHeight = root.winfo_reqheight()
-print("Width",windowWidth,"Height",windowHeight)
+print("Width", windowWidth, "Height", windowHeight)
 # Gets both half the screen width/height and window width/height
 positionRight = int(root.winfo_screenwidth()/3 - windowWidth/2)
 positionDown = int(root.winfo_screenheight()/3 - windowHeight/2)
 # Positions the window in the center of the page
 root.geometry("+{}+{}".format(positionRight, positionDown))
 
-app = Application(master=root)
+app = App(master=root)
 app.mainloop()
