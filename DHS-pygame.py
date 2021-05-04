@@ -34,7 +34,7 @@ class Clues:
         "a coffee cup on the ground",
         "a lid on the ground",
         "some liquid on the ground",
-        "some drops on the ground",
+        "some drops on the floor",
         forest[4]
     ]
 
@@ -43,10 +43,10 @@ class Clues:
         "a wallet on the ground",
         "a book on the ground",
         cafe[3],
-        "an HP laptop charger on the ground"
+        "an HP laptop charger in the basement"
     ]
 
-    school[
+    school = [
         house[2],
         house[0],
         cafe[2],
@@ -62,22 +62,39 @@ class Clues:
         forest[3]
     ]
 
+    def getRandom(location):
+        # Random clue related to location
+        random.choice(location)
 
 class Game:
-    difficulty = 1
+    level = 1
+    time = 60
+    # Randomly pick a hiding palce
+    hidingplace = random.choice(Locations.locations)
+    
+    def isHidingPlace(location):
+        if location == hidingplace:
+            print("You found the computer!")
+            # Increase difficulty
+            level += 1
+            time -= 1
+        else:
+            print("You stare into a void of empty nothingness.")
+            chance = random.randint(0, level)
+            if chance == level:
+                Clues.getRandom(location)
 
-    def getHidingPlace():
-        hidingplace = random.choice(Locations.locations)
-        print(hidingplace)
 
 
 # Start game
 pygame.init()
 
+# Set window size to 480p
 display_width = 853
 display_height = 480
-
 game_display = pygame.display.set_mode((display_width, display_height))
+
+# Set window name
 pygame.display.set_caption('Detective Hide and Seek')
 
 
