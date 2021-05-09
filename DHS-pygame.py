@@ -96,8 +96,9 @@ pygame.font.init()
 display_width = 853
 display_height = 480
 screen = pygame.display.set_mode((display_width, display_height))
-# This will be useful for centering and other stuff later on
-screen_rect = screen.get_rect()
+
+center_x = display_width / 2
+center_y = display_height / 2
 
 # Set colours
 background_grey = (32, 33, 36)
@@ -106,6 +107,7 @@ black = (0, 0, 0)
 red = (255, 0, 0)
 red1 = (200, 0, 0)
 green = (0, 255, 0)
+green1 = (0, 200, 0)
 screen.fill(background_grey)
 
 # Import fonts
@@ -127,17 +129,11 @@ def quitgame():
     pygame.quit()
     quit()
 
-def center(rendered):
-    return rendered.get_rect(center=screen_rect.center)
-
-def text_objects(text, font, color, text_center):
+def text_objects(text, font, color):
     rendered = font.render(text, True, color)
-    if text_center == True:
-        return rendered, center(rendered)
-    else:
-        return rendered
+    return rendered
 
-def button(msg, x,y, w,h, colour,hovercolour, action=None):
+def button(msg, textcolour, font, x,y, w,h, colour,hovercolour, action=None):
     mouse = pygame.mouse.get_pos()
     click = pygame.mouse.get_pressed()
     if x+w > mouse[0] > x and y+h > mouse[1] > y:
@@ -148,8 +144,8 @@ def button(msg, x,y, w,h, colour,hovercolour, action=None):
     else:
         pygame.draw.rect(screen, colour,(x,y,w,h))
 
-    textSurf, textRect = text_objects(msg, Poppins.regular, colour, True)
-    screen.blit(textSurf, textRect)
+    textSurf = text_objects(msg, font, textcolour)
+    screen.blit(textSurf, (x,y))
 
 def event_handler():
     for event in pygame.event.get():
@@ -159,8 +155,8 @@ def event_handler():
 class Page:
     def start():
         screen.blit(img.title, img.title.get_rect(center=(display_width/2, 30)))
-        screen.blit(img.start_button, img.start_button.get_rect(center=(display_width/2, 340)))
-        button("Quit", 426,380, 20,10, red,red1, quitgame)
+        button("Start", "black", Poppins.regular, center_x-40,center_y+100, 80,30, green,green1)
+        button("Quit", "black", Poppins.regular, center_x-40,center_y+140, 80,30, red,red1, quitgame)
 
 
 while True:
