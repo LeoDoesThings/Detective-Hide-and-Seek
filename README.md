@@ -1,2 +1,2 @@
 # Detective Hide and Seek
-A terminal text based Python game.
+A [pygame](https://github.com/Pygame) game.
