@@ -74,7 +74,7 @@ class Game:
     # Randomly pick a hiding palce
     hidingplace = random.choice(Locations.locations)
     
-    def isHidingPlace(location):
+    def checkHidingPlace(location, level, time):
         if location == hidingplace:
             print("You found the computer!")
             # Increase difficulty
@@ -96,6 +96,9 @@ pygame.font.init()
 display_width = 853
 display_height = 480
 screen = pygame.display.set_mode((display_width, display_height))
+# Limit fps to save computer resources used
+clock = pygame.time.Clock()
+FPS = 60
 
 center_x = display_width / 2
 center_y = display_height / 2
@@ -108,7 +111,6 @@ red = (255, 0, 0)
 red1 = (200, 0, 0)
 green = (0, 255, 0)
 green1 = (0, 200, 0)
-screen.fill(background_grey)
 
 # Import fonts
 dir_path = os.path.dirname(os.path.realpath(__file__))
@@ -119,8 +121,6 @@ class Poppins:
 
 class img:
     title = Poppins.bold.render('Detective Hide and Seek', True, white, background_grey)
-    start_button = Poppins.regular.render('Start', True, black, green)
-    quit_button = Poppins.regular.render('Quit', True, black, red)
 
 # Set window name
 pygame.display.set_caption('Detective Hide and Seek')
@@ -151,13 +151,21 @@ def event_handler():
     for event in pygame.event.get():
         if event.type == QUIT:  # Click the X window button to close program
             quitgame()
+        if event.key == pygame.K_SPACE:
+                timer_started = not timer_started
+                if timer_started:
+                    start_time = pygame.time.get_ticks()
 
 class Page:
+    def clear():
+        screen.fill(background_grey)
+
     def start():
         screen.blit(img.title, img.title.get_rect(center=(display_width/2, 30)))
         button("Start", "black", Poppins.regular, center_x-40,center_y+100, 80,30, green,green1)
         button("Quit", "black", Poppins.regular, center_x-40,center_y+140, 80,30, red,red1, quitgame)
 
+timer_started = False
 
 while True:
     event_handler()
@@ -166,3 +174,6 @@ while True:
     Page.start()
 
     pygame.display.update()
+    if timer_started:
+        passed_time = pygame.time.get_ticks() - start_time
+    clock.tick(FPS)
