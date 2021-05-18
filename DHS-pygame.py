@@ -71,6 +71,7 @@ class Clues:
 class Game:
     level = 1
     time = 60
+    timer_started = False
     # Randomly pick a hiding palce
     hidingplace = random.choice(Locations.locations)
     
@@ -86,6 +87,16 @@ class Game:
                 return False, Clues.getRandom(location)
             else:
                 return False
+
+    def startTimer(self):
+        if self.timer_started == False:
+            return pygame.time.get_ticks()
+        else:
+            return 0
+
+    
+    def gameOver():
+        print("Game over!")
 
 
 
@@ -132,8 +143,8 @@ def quitgame():
     quit()
 
 class Graphics:
-    def text_object(text, font, color):
-        rendered = font.render(text, True, color)
+    def text_object(text, font, color, background=None):
+        rendered = font.render(text, True, color, background)
         return rendered
 
     def button(self, msg, textcolour, font, x,y, w,h, colour,hovercolour, action=None):
@@ -150,35 +161,48 @@ class Graphics:
         textSurf = self.text_object(msg, font, textcolour)
         screen.blit(textSurf, (x,y))
 
-class Page:
-    def clear():
-        screen.fill(background_grey)
+class showPage:
+    def __init__(self):
+        self.show_startmenu = True
+        self.show_game = False
+        self.show_clue = False
+        self.show_gameover = False
 
-    def start(self):
-        self.clear()
-        screen.blit(img.title, img.title.get_rect(center=(display_width/2, 30)))
-        Graphics.button(Graphics, "Start", "black", Poppins.regular, center_x-40,center_y+100, 80,30, green,green1)
-        Graphics.button(Graphics, "Quit", "black", Poppins.regular, center_x-40,center_y+140, 80,30, red,red1, quitgame)
+    def startmenu(self):
+        self.show_startmenu = True
+        self.show_game = False
 
     def game(self):
-        self.clear()
-        timer = Game.time
-        seconds = (pygame.time.get_ticks()-start_ticks)/1000
-        timer -= round(seconds)
-        timer_text = Graphics.text_object(str(timer), Poppins.thin, white)
-        screen.blit(timer_text, (display_width-50, 10))
+        self.show_startmenu = False
+        self.show_game = True
 
-start_ticks = pygame.time.get_ticks()
+Game = Game()
+showPage = showPage()
+
 
 while True:
+    screen.fill(background_grey)
+    mouse = pygame.mouse.get_pos()
+
     for event in pygame.event.get():
         if event.type == QUIT:  # Click the X window button to close program
             quitgame()
 
-    mouse = pygame.mouse.get_pos()
+    if showPage.show_startmenu:
+        screen.blit(img.title, img.title.get_rect(center=(display_width/2, 30)))
+        Graphics.button(Graphics, "Start", "black", Poppins.regular, center_x-40,center_y+100, 80,30, green,green1, showPage.game)
+        Graphics.button(Graphics, "Quit", "black", Poppins.regular, center_x-40,center_y+140, 80,30, red,red1, quitgame)
 
-    Page.start(Page)
-    Page.game(Page)
+        pygame.display.update()
+        clock.tick(FPS)
+
+    elif showPage.show_game:
+        
+        timer = Game.time
+        seconds = (pygame.time.get_ticks()-Game.startTimer())/1000
+        timer -= round(seconds)
+        timer_text = Graphics.text_object(str(timer), Poppins.thin, white, background_grey)
+        screen.blit(timer_text, (display_width-50, 10))
 
     pygame.display.update()
     clock.tick(FPS)
