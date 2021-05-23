@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkmacosx import Button
 import random
 
 
@@ -45,7 +46,7 @@ class Clues:
         "an HP laptop charger on the ground"
     ]
 
-    school [
+    school = [
         house[2],
         house[0],
         cafe[2],
@@ -61,14 +62,76 @@ class Clues:
         forest[3]
     ]
 
+    def getRandom(location):
+        # Random clue related to location
+        random.choice(location)
 
 class Game:
-    difficulty = 1
+    level = 1
+    time = 60
+    # Randomly pick a hiding palce
+    hidingplace = random.choice(Locations.locations)
+    
+    def checkHidingPlace(self, location):
+        if location == self.hidingplace:
+            # Increase difficulty
+            self.level += 1
+            self.time -= 1
+            return True
+        else:
+            chance = random.randint(0, self.level)
+            if chance == self.level:
+                return False, Clues.getRandom(location)
+            else:
+                return False
+Game = Game()
 
-    def getHidingPlace():
-        hidingplace = random.choice(Locations.locations)
-        print(hidingplace)
 
+background_grey = "#333"
+
+# Start tkinter
+root = tk.Tk()
+root['bg'] = background_grey
+root.title('Detective Hide and Seek')
+
+# Set window size to 480p
+root.geometry('853x480')
+# Gets the requested values of the height and width
+windowWidth = 853
+windowHeight = 480
+# Gets both half the screen width/height and window width/height
+positionRight = int(root.winfo_screenwidth()/3 - windowWidth/2)
+positionDown = int(root.winfo_screenheight()/3 - windowHeight/2)
+# Positions the window in the center of the page
+root.geometry("+{}+{}".format(positionRight, positionDown))
+
+class Page():
+    def __init__(self, window):
+        self.components = []
+        self.frame = tk.Frame(window, width=windowWidth[0], height=windowHeight[1], bg="#F9EBD1")
+
+    # Add components to page
+    def add_component(self, object, xpos, ypos, anchor, width, height):
+        self.components.append([object,xpos,ypos, anchor, width, height])
+        return
+
+# Game Page Manager
+class PageHandler():
+    def __init__(self, home):
+        self.current = home
+    
+    # Get the games current page frame
+    def getPage(self):
+        return self.current.frame
+
+    # Change the games page
+    def setPage(self, page):
+        # Place all components in desired page
+        for component in page.components:
+            self.current = page
+            object = component[0]
+            object.place(x=component[1], y=component[2], anchor=component[3], width=component[4], height=component[5])
+            self.current.frame.place(x=0,y=0)
 
 class App(tk.Frame):
     def __init__(self, master=None):
@@ -78,34 +141,21 @@ class App(tk.Frame):
         self.create_widgets()
 
     def create_widgets(self):
-        main_title_label = tk.Label(
+        main_title = tk.Label(
             text='Detective Hide and Seek',
             foreground="white",
-            background="#3b3b3b"
+            background=background_grey
         )
-        main_title_label.place()
-        main_title_label.pack(side="top")
+        main_title.config(font=("Courier", 44))
+        main_title.place()
+        main_title.pack(side="top")
 
-        start_button = tk.Button(
-            text="Start", command=Game.getHidingPlace).pack(side="bottom")
-        test_button = tk.Button(
-            text="testing button", command=print(Clues.park[3])).pack(side="bottom")
-
-
-root = tk.Tk()
-root.title('Detective Hide and Seek')
-
-# Set window size to 480p
-root.geometry('853x480')
-# Gets the requested values of the height and width
-windowWidth = root.winfo_reqwidth()
-windowHeight = root.winfo_reqheight()
-print("Width", windowWidth, "Height", windowHeight)
-# Gets both half the screen width/height and window width/height
-positionRight = int(root.winfo_screenwidth()/3 - windowWidth/2)
-positionDown = int(root.winfo_screenheight()/3 - windowHeight/2)
-# Positions the window in the center of the page
-root.geometry("+{}+{}".format(positionRight, positionDown))
+        start_button = Button(root, text='Start', bg='#ADEFD1',
+            fg='#00203F', borderless=1,
+            activebackground='#6eb897',
+            activeforeground='#FFFFFF'
+            )
+        start_button.place(anchor='center', x=windowWidth/2, y=windowHeight-100)
 
 app = App(master=root)
 app.mainloop()

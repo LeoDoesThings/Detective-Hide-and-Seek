@@ -71,7 +71,6 @@ class Clues:
 class Game:
     level = 1
     time = 60
-    timer_started = False
     # Randomly pick a hiding palce
     hidingplace = random.choice(Locations.locations)
     
@@ -87,18 +86,7 @@ class Game:
                 return False, Clues.getRandom(location)
             else:
                 return False
-
-    def startTimer(self):
-        if self.timer_started == False:
-            return pygame.time.get_ticks()
-        else:
-            return 0
-
-    
-    def gameOver():
-        print("Game over!")
-
-
+Game = Game()
 
 
 # Start game
@@ -142,6 +130,21 @@ def quitgame():
     pygame.quit()
     quit()
 
+class gameTimer:
+    def __init__(self):
+        self.timer_started = False
+
+    def __call__(self):
+        if not self.timer_started:
+            start_ticks = pygame.time.get_ticks()
+            self.timer_started = True
+        timer = Game.time
+        seconds = (pygame.time.get_ticks()-start_ticks)/1000
+        timer -= round(seconds)
+        return timer
+
+gameTimer = gameTimer()
+
 class Graphics:
     def text_object(text, font, color, background=None):
         rendered = font.render(text, True, color, background)
@@ -160,23 +163,44 @@ class Graphics:
 
         textSurf = self.text_object(msg, font, textcolour)
         screen.blit(textSurf, (x,y))
+    
+    def timer(self):
+        timer = gameTimer()
+        timer_text = self.text_object(str(timer()), Poppins.thin, white, background_grey)
+        screen.blit(timer_text, (display_width-190, 10))
+        
 
 class showPage:
     def __init__(self):
         self.show_startmenu = True
-        self.show_game = False
+        self.show_map = False
         self.show_clue = False
         self.show_gameover = False
 
     def startmenu(self):
         self.show_startmenu = True
-        self.show_game = False
+        self.show_map = False
+        self.show_clue = False
+        self.show_gameover = False
 
     def game(self):
         self.show_startmenu = False
-        self.show_game = True
+        self.show_map = True
+        self.show_clue = False
+        self.show_gameover = False
+    
+    def clue(self):
+        self.show_startmenu = False
+        self.show_map = False
+        self.show_clue = True
+        self.show_gameover = False
+    
+    def gameOver(self):
+        self.show_startmenu = False
+        self.show_map = False
+        self.show_clue = False
+        self.show_gameover = True
 
-Game = Game()
 showPage = showPage()
 
 
@@ -196,13 +220,12 @@ while True:
         pygame.display.update()
         clock.tick(FPS)
 
-    elif showPage.show_game:
-        
-        timer = Game.time
-        seconds = (pygame.time.get_ticks()-Game.startTimer())/1000
-        timer -= round(seconds)
-        timer_text = Graphics.text_object(str(timer), Poppins.thin, white, background_grey)
-        screen.blit(timer_text, (display_width-50, 10))
+    elif showPage.show_map:
+        timer_text = Graphics.text_object(str(gameTimer()), Poppins.thin, white, background_grey)
+        screen.blit(timer_text, (display_width-190, 10))
+
+        Graphics.button(Graphics, "Forest", "black", Poppins.regular, center_x-40,center_y+140, 80,30, white,white, Game.checkHidingPlace)
+
 
     pygame.display.update()
     clock.tick(FPS)
