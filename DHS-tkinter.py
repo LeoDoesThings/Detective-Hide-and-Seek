@@ -88,74 +88,86 @@ Game = Game()
 
 
 background_grey = "#333"
-
-# Start tkinter
-root = tk.Tk()
-root['bg'] = background_grey
-root.title('Detective Hide and Seek')
-
-# Set window size to 480p
-root.geometry('853x480')
-# Gets the requested values of the height and width
 windowWidth = 853
 windowHeight = 480
-# Gets both half the screen width/height and window width/height
-positionRight = int(root.winfo_screenwidth()/3 - windowWidth/2)
-positionDown = int(root.winfo_screenheight()/3 - windowHeight/2)
-# Positions the window in the center of the page
-root.geometry("+{}+{}".format(positionRight, positionDown))
 
-class Page():
-    def __init__(self, window):
-        self.components = []
-        self.frame = tk.Frame(window, width=windowWidth[0], height=windowHeight[1], bg="#F9EBD1")
 
-    # Add components to page
-    def add_component(self, object, xpos, ypos, anchor, width, height):
-        self.components.append([object,xpos,ypos, anchor, width, height])
-        return
+class App(tk.Tk):
+    def __init__(self):
+        tk.Tk.__init__(self)
+        # Set tkinter window settings
+        self['bg'] = background_grey
+        self.title('Detective Hide and Seek')
 
-# Game Page Manager
-class PageHandler():
-    def __init__(self, home):
-        self.current = home
-    
-    # Get the games current page frame
-    def getPage(self):
-        return self.current.frame
+        # Set window size to 480p
+        self.geometry('853x480')
+        # Gets both half the screen width/height and window width/height
+        positionRight = int(self.winfo_screenwidth()/3 - windowWidth/2)
+        positionDown = int(self.winfo_screenheight()/3 - windowHeight/2)
+        # Positions the window in the center of the screen
+        self.geometry("+{}+{}".format(positionRight, positionDown))
 
-    # Change the games page
-    def setPage(self, page):
-        # Place all components in desired page
-        for component in page.components:
-            self.current = page
-            object = component[0]
-            object.place(x=component[1], y=component[2], anchor=component[3], width=component[4], height=component[5])
-            self.current.frame.place(x=0,y=0)
+        self._frame = None
+        self.switch_frame(StartPage)
 
-class App(tk.Frame):
-    def __init__(self, master=None):
-        super().__init__(master)
-        self.master = master
-        self.pack()
-        self.create_widgets()
+    def switch_frame(self, frame_class):
+        new_frame = frame_class(self)
+        if self._frame is not None:
+            self._frame.destroy()
+        self._frame = new_frame
+        self._frame.pack()
 
-    def create_widgets(self):
+class StartPage(tk.Frame):
+    def __init__(self, master):
+        tk.Frame.__init__(self, master)
+
         main_title = tk.Label(
+            self,
             text='Detective Hide and Seek',
+            font=("Courier", 44),
             foreground="white",
             background=background_grey
         )
-        main_title.config(font=("Courier", 44))
-        main_title.place()
-        main_title.pack(side="top")
+        main_title.pack()
+        start_button = Button(
+            self,
+            text='Start',
+            background='#ADEFD1',
+            foreground='#00203F', borderless=1,
+            activebackground='#6eb897',
+            activeforeground='#FFFFFF',
+            command=lambda: master.switch_frame(MapPage)
+            )
+        start_button.pack(side="bottom", pady=30)
 
-        start_button = Button(root, text='Start', bg='#ADEFD1',
+class MapPage(tk.Frame):
+    def __init__(self, master):
+        tk.Frame.__init__(self, master)
+        tk.Frame.configure(self,bg='blue')
+        tk.Label(self, text="Page one", font=('Helvetica', 18, "bold")).pack(side="top", fill="x", pady=5)
+        tk.Button(self, text="Go back to start page",
+                  command=lambda: master.switch_frame(StartPage)).pack()
+
+class GameOverPage(tk.Frame):
+    def __init__(self, master):
+        tk.Frame.__init__(self, master)
+
+        gameover_title = tk.Label(
+            self,
+            text='Game Over',
+            font=("Courier", 44),
+            foreground="white",
+            background=background_grey
+        )
+        gameover_title.pack()
+        playagain_button = Button(self, text='Play Again?', bg='#ADEFD1',
             fg='#00203F', borderless=1,
             activebackground='#6eb897',
-            activeforeground='#FFFFFF'
+            activeforeground='#FFFFFF',
+            command=lambda: master.switch_frame(MapPage)
             )
-        start_button.place(anchor='center', x=windowWidth/2, y=windowHeight-100)
+        playagain_button.pack()
 
-app = App(master=root)
-app.mainloop()
+if __name__ == "__main__":
+    app = App()
+    app.mainloop()
