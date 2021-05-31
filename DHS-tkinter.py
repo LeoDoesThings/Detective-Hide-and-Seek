@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkmacosx import Button
 import random
+import time
 
 
 class Locations:
@@ -9,7 +10,7 @@ class Locations:
 
     def location_searched(self, location):
         self.searched.append(location)
-
+locations = Locations()
 
 class Clues:
     seen = []
@@ -63,17 +64,22 @@ class Clues:
     ]
 
     def getRandom(location):
-        # Random clue related to location
-        random.choice(location)
+        # New random clue related to location
+        clue = random.choice(location)
+        return clue
 
 class Game:
-    level = 1
-    time = 60
-    # Randomly pick a hiding palce
-    hidingplace = random.choice(Locations.locations)
-    
+    def __init__(self):
+        self.level = 1
+        self.time = 60
+        # Randomly pick a hiding palce
+        self.hidingplace = random.choice(locations.locations)
+
     def checkHidingPlace(self, location):
-        if location == self.hidingplace:
+        location = str(location)
+        if location in locations.searched:
+            print("You've already searched here!")
+        elif location == self.hidingplace:
             # Increase difficulty
             self.level += 1
             self.time -= 1
@@ -81,16 +87,18 @@ class Game:
         else:
             chance = random.randint(0, self.level)
             if chance == self.level:
-                return False, Clues.getRandom(location)
+                return Clues.getRandom(location)
             else:
                 return False
+
+        locations.searched.append(location)
+
 Game = Game()
 
 
-background_grey = "#333"
 windowWidth = 853
 windowHeight = 480
-
+background_grey = "#333"
 
 class App(tk.Tk):
     def __init__(self):
@@ -113,7 +121,12 @@ class App(tk.Tk):
     def switch_frame(self, frame_class):
         new_frame = frame_class(self)
         if self._frame is not None:
-            self._frame.destroy()
+            self._frame.pack_forget()
+        self._frame = new_frame
+        self._frame.pack()
+    
+    def superimpose_frame(self, frame_class):
+        new_frame = frame_class(self)
         self._frame = new_frame
         self._frame.pack()
 
@@ -123,30 +136,76 @@ class StartPage(tk.Frame):
 
         main_title = tk.Label(
             self,
-            text='Detective Hide and Seek',
-            font=("Courier", 44),
-            foreground="white",
-            background=background_grey
+            text="Detective Hide and Seek",
+            font=('Courier', 54, "bold")
         )
-        main_title.pack()
+        main_title.pack(side="top", pady=5)
         start_button = Button(
             self,
             text='Start',
-            background='#ADEFD1',
-            foreground='#00203F', borderless=1,
+            bg='#ADEFD1',
+            fg='#00203F', borderless=1,
             activebackground='#6eb897',
             activeforeground='#FFFFFF',
             command=lambda: master.switch_frame(MapPage)
-            )
+        )
         start_button.pack(side="bottom", pady=30)
 
 class MapPage(tk.Frame):
     def __init__(self, master):
         tk.Frame.__init__(self, master)
-        tk.Frame.configure(self,bg='blue')
-        tk.Label(self, text="Page one", font=('Helvetica', 18, "bold")).pack(side="top", fill="x", pady=5)
-        tk.Button(self, text="Go back to start page",
-                  command=lambda: master.switch_frame(StartPage)).pack()
+        tk.Label(self, text="Map", font=('Courier', 54, "bold")).pack(side="top", fill="x", pady=5)
+        forest = Button(self, 
+            text="Forest",
+            bg="#efcead",
+            command=lambda: whatthehelldoido(self, forest)
+        ).pack()
+        park = Button(self, 
+            text="Park",
+            bg="#efcead",
+            command=lambda: whatthehelldoido(self, park)
+        ).pack()
+        cafe = Button(self, 
+            text="Cafe",
+            bg="#efcead",
+            command=lambda: whatthehelldoido(self, cafe)
+        ).pack()
+        house = Button(self,
+            text="House",
+            bg="#efcead",
+            command=lambda: whatthehelldoido(self, house)
+        ).pack()
+        school = Button(self, 
+            text="School",
+            bg="#efcead",
+            command=lambda: whatthehelldoido(self, school)
+        ).pack()
+        garden = Button(self, 
+            text="Garden",
+            bg="#efcead",
+            command=lambda: whatthehelldoido(self, garden)
+        ).pack()
+
+        def whatthehelldoido(self, location):
+            whattodo = Game.checkHidingPlace(location)
+            if whattodo == True:
+                print("You win!")
+            elif whattodo == False:
+                print("You come up empty.")
+            else:
+                master.superimpose_frame(CluePage)
+
+class CluePage(tk.Frame):
+    def __init__(self, master):
+        tk.Frame.__init__(self, master, bg='red', width=420, height=69)
+        tk.Label(
+            self,
+            text="Clue", 
+            font=('Courier', 18)
+        ).pack(
+            side="top", 
+            pady=5
+        )
 
 class GameOverPage(tk.Frame):
     def __init__(self, master):
