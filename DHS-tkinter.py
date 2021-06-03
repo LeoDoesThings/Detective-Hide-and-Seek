@@ -3,95 +3,100 @@ from tkmacosx import Button
 import random
 import time
 
-
-class Locations:
-    locations = ['forest', 'park', 'cafe', 'house', 'school', 'garden']
-    searched = []
-
-    def location_searched(self, location):
-        self.searched.append(location)
-locations = Locations()
-
-class Clues:
-    seen = []
-
-    forest = [
-        "You notice a muddy footprint on the ground...",
+class Locations():
+    dict = {}
+    # These all need to be addded outside of the initial dictionary set
+    # because we're copying dictionary values to other keys
+    # This could be done in a more efficient way but this is more readable.
+    dict["forest"] = [
+        "a muddy footprint on the ground...", 
         "some dirt on the pavement",
         "a stick on the ground",
         "a leaf blowing past you",
         "a shoelace on the ground"
     ]
 
-    park = [
+    dict["park"] = [
         "a branch on the ground",
         "some gardening gloves on the ground",
-        forest[1],
-        forest[2],
-        forest[4]
+        dict["forest"][1],
+        dict["forest"][2],
+        dict["forest"][4]
     ]
 
-    cafe = [
+    dict["cafe"] = [
         "a coffee cup on the ground",
         "a lid on the ground",
         "some liquid on the ground",
         "some drops on the ground",
-        forest[4]
+        dict["forest"][4]
     ]
 
-    house = [
+    dict["house"] = [
         "a bag on the ground",
         "a wallet on the ground",
         "a book on the ground",
-        cafe[3],
+        dict["cafe"][3],
         "an HP laptop charger on the ground"
     ]
 
-    school = [
-        house[2],
-        house[0],
-        cafe[2],
-        house[1],
-        house[4]
+    dict["school"] = [
+        dict["house"][2],
+        dict["house"][0],
+        dict["cafe"][2],
+        dict["house"][1],
+        dict["house"][4]
     ]
 
-    garden = [
-        park[3],
-        forest[2],
-        forest[1],
-        cafe[2],
-        forest[3]
+    dict["garden"] = [
+        dict["park"][3],
+        dict["forest"][2],
+        dict["forest"][1],
+        dict["cafe"][2],
+        dict["forest"][3]
     ]
 
-    def getRandom(location):
+    searched = []
+    seenclues = []
+
+    def location_searched(self, location):
+        self.searched.append(location)
+
+    def getRandomClue(self, location):
+        location = str(location)
         # New random clue related to location
-        clue = random.choice(location)
+        num = random.randrange(0, 5)
+        print(location)
+        clue = self.dict[location][num]
+        while clue in self.seenclues:
+            clue = random.choice(location)
+        self.seenclues.append(clue)
         return clue
+locations = Locations()
 
-class Game:
+class Game():
     def __init__(self):
         self.level = 1
         self.time = 60
         # Randomly pick a hiding palce
-        self.hidingplace = random.choice(locations.locations)
+        self.hidingplace = random.choice(list(locations.dict))
 
     def checkHidingPlace(self, location):
         location = str(location)
         if location in locations.searched:
-            print("You've already searched here!")
+            return "searched"
         elif location == self.hidingplace:
             # Increase difficulty
             self.level += 1
             self.time -= 1
             return True
         else:
+            locations.searched.append(location)
             chance = random.randint(0, self.level)
             if chance == self.level:
-                return Clues.getRandom(location)
+                return locations.getRandomClue(location)
             else:
                 return False
-
-        locations.searched.append(location)
 
 Game = Game()
 
@@ -158,54 +163,54 @@ class MapPage(tk.Frame):
         forest = Button(self, 
             text="Forest",
             bg="#efcead",
-            command=lambda: whatthehelldoido(self, forest)
+            command=lambda: whatthehelldoido(forest)
         ).pack()
         park = Button(self, 
             text="Park",
             bg="#efcead",
-            command=lambda: whatthehelldoido(self, park)
+            command=lambda: whatthehelldoido(park)
         ).pack()
         cafe = Button(self, 
             text="Cafe",
             bg="#efcead",
-            command=lambda: whatthehelldoido(self, cafe)
+            command=lambda: whatthehelldoido(cafe)
         ).pack()
         house = Button(self,
             text="House",
             bg="#efcead",
-            command=lambda: whatthehelldoido(self, house)
+            command=lambda: whatthehelldoido(house)
         ).pack()
         school = Button(self, 
             text="School",
             bg="#efcead",
-            command=lambda: whatthehelldoido(self, school)
+            command=lambda: whatthehelldoido(school)
         ).pack()
         garden = Button(self, 
             text="Garden",
             bg="#efcead",
-            command=lambda: whatthehelldoido(self, garden)
+            command=lambda: whatthehelldoido(garden)
         ).pack()
 
-        def whatthehelldoido(self, location):
+        def whatthehelldoido(location):
             whattodo = Game.checkHidingPlace(location)
-            if whattodo == True:
+            if whattodo == "searched":
+                print("You've searched this place!")
+                return
+            elif whattodo == True:
                 print("You win!")
             elif whattodo == False:
                 print("You come up empty.")
             else:
-                master.superimpose_frame(CluePage)
-
-class CluePage(tk.Frame):
-    def __init__(self, master):
-        tk.Frame.__init__(self, master, bg='red', width=420, height=69)
-        tk.Label(
-            self,
-            text="Clue", 
-            font=('Courier', 18)
-        ).pack(
-            side="top", 
-            pady=5
-        )
+                print(whattodo)
+                cluemessage = "You notice " + str(whattodo)
+                tk.Label(
+                    self,
+                    text=cluemessage, 
+                    font=('Courier', 18)
+                ).pack(
+                    side="top",
+                    pady=5
+                )
 
 class GameOverPage(tk.Frame):
     def __init__(self, master):
