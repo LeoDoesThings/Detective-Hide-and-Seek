@@ -59,11 +59,9 @@ class Locations():
     searched = []
     seenclues = []
 
-    def location_searched(self, location):
-        self.searched.append(location)
-
     def getRandomClue(self, location):
         location = str(location)
+        self.searched.append(location)
         # New random clue related to location
         num = random.randrange(0, 5)
         print(location)
@@ -91,7 +89,6 @@ class Game():
             self.time -= 1
             return True
         else:
-            locations.searched.append(location)
             chance = random.randint(0, self.level)
             if chance == self.level:
                 return locations.getRandomClue(location)
