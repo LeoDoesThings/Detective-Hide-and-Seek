@@ -1,7 +1,13 @@
 import tkinter as tk
-from tkmacosx import Button
 import random
-import time
+import sys
+
+try:
+    from tkmacosx import Button
+except ImportError:
+    sys.exit("""You need tkmacosx!
+                install it from https://pypi.org/project/tkmacosx/
+                or run pip install tkmacosx.""")
 
 class Locations():
     dict = {}
