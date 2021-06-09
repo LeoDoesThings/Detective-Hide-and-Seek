@@ -1,2 +1,2 @@
 # Detective Hide and Seek
-A [pygame](https://github.com/Pygame) game.
+A [tkinter](https://docs.python.org/3/library/tkinter.html) game.
