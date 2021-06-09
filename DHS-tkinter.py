@@ -60,38 +60,45 @@ class Locations():
     seenclues = []
 
     def getRandomClue(self, location):
-        location = str(location)
-        self.searched.append(location)
         # New random clue related to location
         num = random.randrange(0, 5)
-        print(location)
         clue = self.dict[location][num]
-        while clue in self.seenclues:
-            clue = random.choice(location)
+        while True:
+            if clue in self.seenclues:
+                clue = random.choice(location)
+            else:
+                break
         self.seenclues.append(clue)
         return clue
 locations = Locations()
 
-class Game():
+class Game(tk.Tk):
     def __init__(self):
         self.level = 1
         self.time = 60
-        # Randomly pick a hiding palce
+        self.mapcountdown = 0
+        self.searchcountdown = 0
+        # Randomly pick a hiding place
         self.hidingplace = random.choice(list(locations.dict))
+    
+    def playagain(self):
+        self.hidingplace = random.choice(list(locations.dict))
+        App.switch_frame(App, MapPage)
 
     def checkHidingPlace(self, location):
-        location = str(location)
-        if location in locations.searched:
+        location_str = str(location)
+        if location_str in locations.searched:
             return "searched"
-        elif location == self.hidingplace:
+        elif location_str == self.hidingplace:
             # Increase difficulty
             self.level += 1
             self.time -= 1
             return True
         else:
+            locations.searched.append(location_str)
             chance = random.randint(0, self.level)
             if chance == self.level:
-                return locations.getRandomClue(location)
+                return locations.getRandomClue(location_str)
             else:
                 return False
 
@@ -120,6 +127,9 @@ class App(tk.Tk):
         self._frame = None
         self.switch_frame(StartPage)
 
+        self.remaining = 0
+        self.timerlabel = tk.Label(self, text="", width=10)
+
     def switch_frame(self, frame_class):
         new_frame = frame_class(self)
         if self._frame is not None:
@@ -127,10 +137,17 @@ class App(tk.Tk):
         self._frame = new_frame
         self._frame.pack()
     
-    def superimpose_frame(self, frame_class):
-        new_frame = frame_class(self)
-        self._frame = new_frame
-        self._frame.pack()
+    def countdown(self, remaining=None):
+        if remaining is not None:
+            self.remaining = remaining
+
+        if self.remaining <= 0:
+            self.timerlabel.pack_forget()
+        else:
+            self.timerlabel.pack()
+            self.timerlabel.configure(text="%d" % self.remaining, font=('Courier', 24, "bold"))
+            self.remaining = self.remaining - 1
+            self.after(1000, self.countdown)
 
 class StartPage(tk.Frame):
     def __init__(self, master):
@@ -160,32 +177,32 @@ class MapPage(tk.Frame):
         forest = Button(self, 
             text="Forest",
             bg="#efcead",
-            command=lambda: whatthehelldoido(forest)
+            command=lambda: whatthehelldoido("forest")
         ).pack()
         park = Button(self, 
             text="Park",
             bg="#efcead",
-            command=lambda: whatthehelldoido(park)
+            command=lambda: whatthehelldoido("park")
         ).pack()
         cafe = Button(self, 
             text="Cafe",
             bg="#efcead",
-            command=lambda: whatthehelldoido(cafe)
+            command=lambda: whatthehelldoido("cafe")
         ).pack()
         house = Button(self,
             text="House",
             bg="#efcead",
-            command=lambda: whatthehelldoido(house)
+            command=lambda: whatthehelldoido("house")
         ).pack()
         school = Button(self, 
             text="School",
             bg="#efcead",
-            command=lambda: whatthehelldoido(school)
+            command=lambda: whatthehelldoido("school")
         ).pack()
         garden = Button(self, 
             text="Garden",
             bg="#efcead",
-            command=lambda: whatthehelldoido(garden)
+            command=lambda: whatthehelldoido("garden")
         ).pack()
 
         def whatthehelldoido(location):
@@ -194,20 +211,74 @@ class MapPage(tk.Frame):
                 print("You've searched this place!")
                 return
             elif whattodo == True:
-                print("You win!")
+                master.switch_frame(YouWinPage)
             elif whattodo == False:
                 print("You come up empty.")
             else:
-                print(whattodo)
+                master.switch_frame(SearchingPage)
                 cluemessage = "You notice " + str(whattodo)
                 tk.Label(
                     self,
-                    text=cluemessage, 
+                    text=cluemessage,
                     font=('Courier', 18)
-                ).pack(
-                    side="top",
-                    pady=5
-                )
+                ).pack(side="top", pady=5)
+
+class SearchingPage(tk.Frame):
+    def __init__(self, master):
+        tk.Frame.__init__(self, master)
+
+        searching_title = tk.Label(
+            self,
+            text='Searching...',
+            font=("Courier", 36),
+            foreground="white",
+            background=background_grey
+        ).pack(fill="none", expand=True) # This centers the title in the middle of the screen
+
+        searchingtime = random.randrange(5, 13)
+        master.countdown(searchingtime)
+        self.after(searchingtime*1000, master.switch_frame, MapPage)
+
+class YouWinPage(tk.Frame):
+    def __init__(self, master):
+        tk.Frame.__init__(self, master)
+
+        roundnum = Game.level-1
+        youwin_title = tk.Label(
+            self,
+            text='You Win!',
+            font=("Courier", 44),
+            foreground="white",
+            background=background_grey
+        ).pack()
+
+        roundcomplete = tk.Label(
+            self,
+            text='Round ' + str(roundnum) + ": Complete",
+            font=("Courier", 18),
+            foreground="white",
+            background=background_grey
+        ).pack()
+
+        playagain_button = Button(self, 
+            text='Play Round ' + str(roundnum+1), 
+            bg='#ADEFD1',
+            fg='#00203F', 
+            borderless=1,
+            activebackground='#6eb897',
+            activeforeground='#FFFFFF',
+            command=lambda: Game.playagain()
+        ).pack()
+
+        exit_button = Button(self, 
+            text='Exit', 
+            bg='#ADEFD1',
+            fg='#00203F', 
+            borderless=1,
+            activebackground='#6eb897',
+            activeforeground='#FFFFFF',
+            command=lambda: app.destroy()
+        ).pack()
 
 class GameOverPage(tk.Frame):
     def __init__(self, master):
