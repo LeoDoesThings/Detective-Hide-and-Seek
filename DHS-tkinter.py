@@ -86,6 +86,7 @@ class Game(tk.Tk):
             return "searched"
         elif location_str == self.hidingplace:
             return True
+        return False
     
     def getClue(self, location):
         location_str = str(location)
@@ -145,7 +146,7 @@ class App(tk.Tk):
         self._frame.pack()
 
     def playAgain(self, levelup=True):
-        if levelup == True:
+        if levelup is True:
             Game.level += 1
             Game.time -= 5
         Game.hidingplace = random.choice(list(locations.dict))
@@ -155,10 +156,10 @@ class App(tk.Tk):
         self.countdown(Game.time)
         self.switch_frame(MapPage)
     
-    def playerFinished(self, winstatus):
+    def playerFinished(self, playerwon):
         # End the timer before switching to the win page
         self.timerrunning = False
-        if winstatus == True:
+        if playerwon is True:
             self.switch_frame(YouWinPage)
         else:
             self.switch_frame(GameOverPage)
@@ -167,7 +168,7 @@ class App(tk.Tk):
         if remaining is not None:
             self.remaining = remaining
         
-        if self.timerrunning == False:
+        if self.timerrunning is False:
             self.remaining = 0
             self.timerlabel.pack_forget()
         elif self.remaining <= 0:
@@ -241,7 +242,7 @@ class MapPage(tk.Frame):
             isHidingPlace = Game.checkHidingPlace(location)
             if isHidingPlace == "searched":
                 print("You've searched this place!")
-            elif isHidingPlace == True:
+            elif isHidingPlace is True:
                 Game.searching = True
                 master.switch_frame(SearchingPage)
             else:
@@ -268,7 +269,7 @@ class SearchingPage(tk.Frame):
         self.clue = Game.getClue(Game.searching)
         self.countdown(searchingtime)
 
-        if Game.searching == True:
+        if Game.searching is True:
             waittime = random.randrange(4, searchingtime-1)
             self.after(waittime*1000, master.playerFinished, True)
         else:
@@ -278,8 +279,8 @@ class SearchingPage(tk.Frame):
         if remaining is not None:
             self.remaining = remaining
 
-        if self.remaining == 3 and Game.searching != True:
-            if self.clue == False:
+        if self.remaining == 3 and Game.searching is not True:
+            if self.clue is False:
                 tk.Label(
                     self,
                     text="You come up empty.",
