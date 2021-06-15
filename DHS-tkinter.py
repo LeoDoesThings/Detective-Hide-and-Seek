@@ -84,7 +84,7 @@ class Game(tk.Tk):
         location_str = str(location)
         if location_str in locations.searched:
             return "searched"
-        elif location_str == self.hidingplace:
+        if location_str == self.hidingplace:
             return True
         return False
     
@@ -102,9 +102,8 @@ class Game(tk.Tk):
                     break
             self.seenclues.append(clue)
             return clue
-        else:
-            # Tell game that there is no clue
-            return False
+        # Tell game that there is no clue
+        return False
 
 
 Game = Game()
@@ -329,7 +328,7 @@ class YouWinPage(tk.Frame):
             borderless=1,
             activebackground='#6eb897',
             activeforeground='#FFFFFF',
-            command=lambda: master.playAgain()
+            command=master.playAgain()
         ).pack()
 
         exit_button = Button(self, 
@@ -339,7 +338,7 @@ class YouWinPage(tk.Frame):
             borderless=1,
             activebackground='#6eb897',
             activeforeground='#FFFFFF',
-            command=lambda: app.destroy()
+            command=app.destroy()
         ).pack()
 
 class GameOverPage(tk.Frame):
@@ -383,6 +382,16 @@ Your best time was {Game.time}
             command=lambda: master.playAgain(False)
             )
         playagain_button.pack()
+
+        exit_button = Button(self, 
+            text='Exit',
+            bg='#ADEFD1',
+            fg='#00203F',
+            borderless=1,
+            activebackground='#6eb897',
+            activeforeground='#FFFFFF',
+            command=app.destroy()
+        ).pack()
 
 if __name__ == "__main__":
     app = App()
