@@ -42,31 +42,32 @@ class Locations():
         "a bag on the ground",
         "a wallet on the ground",
         "a book on the ground",
-        dict["cafe"][3],
-        "an HP laptop charger on the ground"
+        "an HP laptop charger on the ground",
+        dict["cafe"][3]
     ]
 
     dict["school"] = [
-        dict["house"][2],
         dict["house"][0],
-        dict["cafe"][2],
         dict["house"][1],
-        dict["house"][4]
+        dict["house"][2],
+        dict["house"][4],
+        dict["cafe"][2]
     ]
 
     dict["garden"] = [
-        dict["park"][3],
-        dict["forest"][2],
         dict["forest"][1],
-        dict["cafe"][2],
-        dict["forest"][3]
+        dict["forest"][2],
+        dict["forest"][3],
+        dict["park"][1],
+        dict["cafe"][2]
     ]
 
     searched = []
     seenclues = []
 
     def randomClue(self, location):
-        num = random.randrange(0, 6)
+        num = random.randrange(0, 5)
+        print("LOOK AT ME", location, num)
         return self.dict[location][num]
 
 locations = Locations()
@@ -95,9 +96,9 @@ class Game(tk.Tk):
         # Chance for a clue is lower as you level up
         chance = random.randint(0, self.level)
         if chance == self.level:
-            # Always show a clue the player hasn't seen before
+        # Always show a clue the player hasn't seen before
             while True:
-                clue = locations.randomClue(location)
+                clue = locations.randomClue(location_str)
                 if clue not in locations.seenclues:
                     break
             self.seenclues.append(clue)
@@ -207,7 +208,6 @@ class MapPage(tk.Frame):
     def __init__(self, master):
         tk.Frame.__init__(self, master)
 
-        print(Game.hidingplace)
         tk.Label(self, text="Map", font=('Courier', 54, "bold")).pack(side="top", fill="x", pady=5)
         forest = Button(self,
             text="Forest",
@@ -275,13 +275,13 @@ class SearchingPage(tk.Frame):
 
         searchingtime = random.randrange(8, 14)
 
-        self.clue = Game.getClue(Game.searching)
         self.countdown(searchingtime)
 
         if Game.searching is True:
             waittime = random.randrange(4, searchingtime-1)
             self.after(waittime*1000, master.playerFinished, True)
         else:
+            self.clue = Game.getClue(Game.searching)
             self.after(searchingtime*1000, master.switch_frame, MapPage)
 
     def countdown(self, remaining=None):
