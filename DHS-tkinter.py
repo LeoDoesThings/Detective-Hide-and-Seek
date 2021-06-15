@@ -328,7 +328,7 @@ class YouWinPage(tk.Frame):
             borderless=1,
             activebackground='#6eb897',
             activeforeground='#FFFFFF',
-            command=master.playAgain()
+            command=lambda: master.playAgain()
         ).pack()
 
         exit_button = Button(self, 
@@ -338,7 +338,7 @@ class YouWinPage(tk.Frame):
             borderless=1,
             activebackground='#6eb897',
             activeforeground='#FFFFFF',
-            command=app.destroy()
+            command=lambda: app.destroy()
         ).pack()
 
 class GameOverPage(tk.Frame):
@@ -390,7 +390,7 @@ Your best time was {Game.time}
             borderless=1,
             activebackground='#6eb897',
             activeforeground='#FFFFFF',
-            command=app.destroy()
+            command=lambda: app.destroy()
         ).pack()
 
 if __name__ == "__main__":
