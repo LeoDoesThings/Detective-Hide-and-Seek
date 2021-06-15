@@ -210,32 +210,38 @@ class MapPage(tk.Frame):
             text="Forest",
             bg="#efcead",
             command=lambda: searchLocation("forest")
-        ).pack()
+        )
+        forest.pack()
         park = Button(self,
             text="Park",
             bg="#efcead",
             command=lambda: searchLocation("park")
-        ).pack()
+        )
+        park.pack()
         cafe = Button(self,
             text="Cafe",
             bg="#efcead",
             command=lambda: searchLocation("cafe")
-        ).pack()
+        )
+        cafe.pack()
         house = Button(self,
             text="House",
             bg="#efcead",
             command=lambda: searchLocation("house")
-        ).pack()
+        )
+        house.pack()
         school = Button(self,
             text="School",
             bg="#efcead",
             command=lambda: searchLocation("school")
-        ).pack()
+        )
+        school.pack()
         garden = Button(self,
             text="Garden",
             bg="#efcead",
             command=lambda: searchLocation("garden")
-        ).pack()
+        )
+        garden.pack()
 
         def searchLocation(location):
             isHidingPlace = Game.checkHidingPlace(location)
@@ -252,7 +258,8 @@ class SearchingPage(tk.Frame):
     def __init__(self, master):
         tk.Frame.__init__(self, master)
 
-        searching_title = tk.Label(
+        # Searching title message
+        tk.Label(
             self,
             text='Searching...',
             font=("Courier", 36),
@@ -305,7 +312,8 @@ class YouWinPage(tk.Frame):
         tk.Frame.__init__(self, master)
 
         roundnum = Game.level
-        youwin_title = tk.Label(
+        # You Win title message
+        tk.Label(
             self,
             text='You Win!',
             font=("Courier", 44),
@@ -313,7 +321,8 @@ class YouWinPage(tk.Frame):
             background=background_grey
         ).pack()
 
-        roundcomplete = tk.Label(
+        # Round compelete message
+        tk.Label(
             self,
             text=f"Round {roundnum}: Complete",
             font=("Courier", 18),
@@ -321,7 +330,8 @@ class YouWinPage(tk.Frame):
             background=background_grey
         ).pack()
 
-        playagain_button = Button(self,
+        # Play again button
+        Button(self,
             text=f"Play Round {roundnum+1}",
             bg='#ADEFD1',
             fg='#00203F',
@@ -331,7 +341,8 @@ class YouWinPage(tk.Frame):
             command=lambda: master.playAgain()
         ).pack()
 
-        exit_button = Button(self,
+        # Exit button
+        Button(self,
             text='Exit',
             bg='#ADEFD1',
             fg='#00203F',
@@ -345,16 +356,17 @@ class GameOverPage(tk.Frame):
     def __init__(self, master):
         tk.Frame.__init__(self, master)
 
-        gameover_title = tk.Label(
+        # Game over title
+        tk.Label(
             self,
             text='Game Over',
             font=("Courier", 44),
             foreground="white",
             background=background_grey
-        )
-        gameover_title.pack()
+        ).pack()
 
-        stats = tk.Label(
+        # User stats label
+        tk.Label(
             self,
             text=f"""
 You survived until Round {Game.level}
@@ -363,27 +375,27 @@ Your best time was {Game.time}
             font=("Courier", 18),
             foreground="white",
             background=background_grey
-        )
-        stats.pack()
+        ).pack()
 
-        hidingplace_text = tk.Label(
+        # Hiding place message
+        tk.Label(
             self,
             text=f"The hiding place was {Game.hidingplace}",
             font=("Courier", 16, "bold"),
             foreground="white",
             background=background_grey
-        )
-        hidingplace_text.pack()
+        ).pack()
 
-        playagain_button = Button(self, text='Play Again?', bg='#ADEFD1',
+        # Play again button
+        Button(self, text='Play Again?', bg='#ADEFD1',
             fg='#00203F', borderless=1,
             activebackground='#6eb897',
             activeforeground='#FFFFFF',
             command=lambda: master.playAgain(False)
-            )
-        playagain_button.pack()
+            ).pack()
 
-        exit_button = Button(self,
+        # Exit button
+        Button(self,
             text='Exit',
             bg='#ADEFD1',
             fg='#00203F',
