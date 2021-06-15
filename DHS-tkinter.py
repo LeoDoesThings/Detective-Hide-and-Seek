@@ -15,7 +15,7 @@ class Locations():
     # because we're copying dictionary values to other keys
     # This could be done in a more efficient way but this is more readable.
     dict["forest"] = [
-        "a muddy footprint on the ground...", 
+        "a muddy footprint on the ground...",
         "some dirt on the pavement",
         "a stick on the ground",
         "a leaf blowing past you",
@@ -87,7 +87,7 @@ class Game(tk.Tk):
         if location_str == self.hidingplace:
             return True
         return False
-    
+
     def getClue(self, location):
         location_str = str(location)
         # Remember that this location was searched
@@ -154,7 +154,7 @@ class App(tk.Tk):
         self.timerrunning = True
         self.countdown(Game.time)
         self.switch_frame(MapPage)
-    
+
     def playerFinished(self, playerwon):
         # End the timer before switching to the win page
         self.timerrunning = False
@@ -162,11 +162,11 @@ class App(tk.Tk):
             self.switch_frame(YouWinPage)
         else:
             self.switch_frame(GameOverPage)
-    
+
     def countdown(self, remaining=None):
         if remaining is not None:
             self.remaining = remaining
-        
+
         if self.timerrunning is False:
             self.remaining = 0
             self.timerlabel.pack_forget()
@@ -226,17 +226,17 @@ class MapPage(tk.Frame):
             bg="#efcead",
             command=lambda: searchLocation("house")
         ).pack()
-        school = Button(self, 
+        school = Button(self,
             text="School",
             bg="#efcead",
             command=lambda: searchLocation("school")
         ).pack()
-        garden = Button(self, 
+        garden = Button(self,
             text="Garden",
             bg="#efcead",
             command=lambda: searchLocation("garden")
         ).pack()
-        
+
         def searchLocation(location):
             isHidingPlace = Game.checkHidingPlace(location)
             if isHidingPlace == "searched":
@@ -273,7 +273,7 @@ class SearchingPage(tk.Frame):
             self.after(waittime*1000, master.playerFinished, True)
         else:
             self.after(searchingtime*1000, master.switch_frame, MapPage)
-    
+
     def countdown(self, remaining=None):
         if remaining is not None:
             self.remaining = remaining
@@ -321,8 +321,8 @@ class YouWinPage(tk.Frame):
             background=background_grey
         ).pack()
 
-        playagain_button = Button(self, 
-            text=f"Play Round {roundnum+1}", 
+        playagain_button = Button(self,
+            text=f"Play Round {roundnum+1}",
             bg='#ADEFD1',
             fg='#00203F',
             borderless=1,
@@ -331,7 +331,7 @@ class YouWinPage(tk.Frame):
             command=lambda: master.playAgain()
         ).pack()
 
-        exit_button = Button(self, 
+        exit_button = Button(self,
             text='Exit',
             bg='#ADEFD1',
             fg='#00203F',
@@ -383,7 +383,7 @@ Your best time was {Game.time}
             )
         playagain_button.pack()
 
-        exit_button = Button(self, 
+        exit_button = Button(self,
             text='Exit',
             bg='#ADEFD1',
             fg='#00203F',
