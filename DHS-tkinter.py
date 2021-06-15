@@ -175,7 +175,10 @@ class App(tk.Tk):
             self.switch_frame(GameOverPage)
         else:
             self.timerlabel.pack(side="top", anchor="ne")
-            self.timerlabel.configure(text="Time: %d" % self.remaining, font=('Courier', 24, "bold"))
+            self.timerlabel.configure(
+                text="Time: %d" % self.remaining,
+                font=('Courier', 24, "bold")
+            )
             self.remaining = self.remaining - 1
             self.after(1000, self.countdown)
 
