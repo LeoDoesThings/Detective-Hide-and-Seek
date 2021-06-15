@@ -1,10 +1,10 @@
 import tkinter as tk
 import random
-import sys
 
 try:
     from tkmacosx import Button
 except ImportError:
+    import sys
     sys.exit("""You need tkmacosx!
                 install it from https://pypi.org/project/tkmacosx/
                 or run pip install tkmacosx.""")
@@ -65,48 +65,46 @@ class Locations():
     searched = []
     seenclues = []
 
-    def getRandomClue(self, location):
-        # New random clue related to location
-        num = random.randrange(0, 5)
-        clue = self.dict[location][num]
-        while True:
-            if clue in self.seenclues:
-                clue = random.choice(location)
-            else:
-                break
-        self.seenclues.append(clue)
-        return clue
+    def randomClue(self, location):
+        num = random.randrange(0, 6)
+        return self.dict[location][num]
+
 locations = Locations()
 
 class Game(tk.Tk):
     def __init__(self):
         self.level = 1
         self.time = 60
-        self.mapcountdown = 0
-        self.searchcountdown = 0
         # Randomly pick a hiding place
         self.hidingplace = random.choice(list(locations.dict))
-    
-    def playagain(self):
-        self.hidingplace = random.choice(list(locations.dict))
-        App.switch_frame(App, MapPage)
+
+        self.searching = False
 
     def checkHidingPlace(self, location):
         location_str = str(location)
         if location_str in locations.searched:
             return "searched"
         elif location_str == self.hidingplace:
-            # Increase difficulty
-            self.level += 1
-            self.time -= 1
             return True
+    
+    def getClue(self, location):
+        location_str = str(location)
+        # Remember that this location was searched
+        locations.searched.append(location_str)
+        # Chance for a clue is lower as you level up
+        chance = random.randint(0, self.level)
+        if chance == self.level:
+            # Always show a clue the player hasn't seen before
+            while True:
+                clue = locations.randomClue(location)
+                if clue not in locations.seenclues:
+                    break
+            self.seenclues.append(clue)
+            return clue
         else:
-            locations.searched.append(location_str)
-            chance = random.randint(0, self.level)
-            if chance == self.level:
-                return locations.getRandomClue(location_str)
-            else:
-                return False
+            # Tell game that there is no clue
+            return False
+
 
 Game = Game()
 
@@ -130,10 +128,13 @@ class App(tk.Tk):
         # Positions the window in the center of the screen
         self.geometry("+{}+{}".format(positionRight, positionDown))
 
+        # Start the game on the starting page
         self._frame = None
         self.switch_frame(StartPage)
 
+        # Timer settings
         self.remaining = 0
+        self.timerrunning = False
         self.timerlabel = tk.Label(self, text="", width=10)
 
     def switch_frame(self, frame_class):
@@ -142,16 +143,39 @@ class App(tk.Tk):
             self._frame.pack_forget()
         self._frame = new_frame
         self._frame.pack()
+
+    def playAgain(self, levelup=True):
+        if levelup == True:
+            Game.level += 1
+            Game.time -= 5
+        Game.hidingplace = random.choice(list(locations.dict))
+        locations.searched.clear()
+        locations.seenclues.clear()
+        self.timerrunning = True
+        self.countdown(Game.time)
+        self.switch_frame(MapPage)
+    
+    def playerFinished(self, winstatus):
+        # End the timer before switching to the win page
+        self.timerrunning = False
+        if winstatus == True:
+            self.switch_frame(YouWinPage)
+        else:
+            self.switch_frame(GameOverPage)
     
     def countdown(self, remaining=None):
         if remaining is not None:
             self.remaining = remaining
-
-        if self.remaining <= 0:
+        
+        if self.timerrunning == False:
+            self.remaining = 0
             self.timerlabel.pack_forget()
+        elif self.remaining <= 0:
+            self.timerlabel.pack_forget()
+            self.switch_frame(GameOverPage)
         else:
-            self.timerlabel.pack()
-            self.timerlabel.configure(text="%d" % self.remaining, font=('Courier', 24, "bold"))
+            self.timerlabel.pack(side="top", anchor="ne")
+            self.timerlabel.configure(text="Time: %d" % self.remaining, font=('Courier', 24, "bold"))
             self.remaining = self.remaining - 1
             self.after(1000, self.countdown)
 
@@ -172,62 +196,57 @@ class StartPage(tk.Frame):
             fg='#00203F', borderless=1,
             activebackground='#6eb897',
             activeforeground='#FFFFFF',
-            command=lambda: master.switch_frame(MapPage)
+            command=lambda: master.playAgain(False)
         )
         start_button.pack(side="bottom", pady=30)
 
 class MapPage(tk.Frame):
     def __init__(self, master):
         tk.Frame.__init__(self, master)
+
+        print(Game.hidingplace)
         tk.Label(self, text="Map", font=('Courier', 54, "bold")).pack(side="top", fill="x", pady=5)
-        forest = Button(self, 
+        forest = Button(self,
             text="Forest",
             bg="#efcead",
-            command=lambda: whatthehelldoido("forest")
+            command=lambda: searchLocation("forest")
         ).pack()
-        park = Button(self, 
+        park = Button(self,
             text="Park",
             bg="#efcead",
-            command=lambda: whatthehelldoido("park")
+            command=lambda: searchLocation("park")
         ).pack()
-        cafe = Button(self, 
+        cafe = Button(self,
             text="Cafe",
             bg="#efcead",
-            command=lambda: whatthehelldoido("cafe")
+            command=lambda: searchLocation("cafe")
         ).pack()
         house = Button(self,
             text="House",
             bg="#efcead",
-            command=lambda: whatthehelldoido("house")
+            command=lambda: searchLocation("house")
         ).pack()
         school = Button(self, 
             text="School",
             bg="#efcead",
-            command=lambda: whatthehelldoido("school")
+            command=lambda: searchLocation("school")
         ).pack()
         garden = Button(self, 
             text="Garden",
             bg="#efcead",
-            command=lambda: whatthehelldoido("garden")
+            command=lambda: searchLocation("garden")
         ).pack()
-
-        def whatthehelldoido(location):
-            whattodo = Game.checkHidingPlace(location)
-            if whattodo == "searched":
+        
+        def searchLocation(location):
+            isHidingPlace = Game.checkHidingPlace(location)
+            if isHidingPlace == "searched":
                 print("You've searched this place!")
-                return
-            elif whattodo == True:
-                master.switch_frame(YouWinPage)
-            elif whattodo == False:
-                print("You come up empty.")
-            else:
+            elif isHidingPlace == True:
+                Game.searching = True
                 master.switch_frame(SearchingPage)
-                cluemessage = "You notice " + str(whattodo)
-                tk.Label(
-                    self,
-                    text=cluemessage,
-                    font=('Courier', 18)
-                ).pack(side="top", pady=5)
+            else:
+                Game.searching = location
+                master.switch_frame(SearchingPage)
 
 class SearchingPage(tk.Frame):
     def __init__(self, master):
@@ -239,17 +258,53 @@ class SearchingPage(tk.Frame):
             font=("Courier", 36),
             foreground="white",
             background=background_grey
-        ).pack(fill="none", expand=True) # This centers the title in the middle of the screen
+        ).pack(anchor="center")
 
-        searchingtime = random.randrange(5, 13)
-        master.countdown(searchingtime)
-        self.after(searchingtime*1000, master.switch_frame, MapPage)
+        self.remaining = 0
+        self.timerlabel = tk.Label(self, text="", width=10)
+
+        searchingtime = random.randrange(8, 14)
+
+        self.clue = Game.getClue(Game.searching)
+        self.countdown(searchingtime)
+
+        if Game.searching == True:
+            waittime = random.randrange(4, searchingtime-1)
+            self.after(waittime*1000, master.playerFinished, True)
+        else:
+            self.after(searchingtime*1000, master.switch_frame, MapPage)
+    
+    def countdown(self, remaining=None):
+        if remaining is not None:
+            self.remaining = remaining
+
+        if self.remaining == 3 and Game.searching != True:
+            if self.clue == False:
+                tk.Label(
+                    self,
+                    text="You come up empty.",
+                    font=('Courier', 18)
+                ).pack(side="top", pady=5)
+            else:
+                tk.Label(
+                    self,
+                    text=f"You notice {self.clue}",
+                    font=('Courier', 18)
+                ).pack(side="top", pady=5)
+
+        if self.remaining <= 0:
+            self.timerlabel.pack_forget()
+        else:
+            self.timerlabel.pack()
+            self.timerlabel.configure(text="%d" % self.remaining, font=('Courier', 24, "bold"))
+            self.remaining = self.remaining - 1
+            self.after(1000, self.countdown)
 
 class YouWinPage(tk.Frame):
     def __init__(self, master):
         tk.Frame.__init__(self, master)
 
-        roundnum = Game.level-1
+        roundnum = Game.level
         youwin_title = tk.Label(
             self,
             text='You Win!',
@@ -260,26 +315,26 @@ class YouWinPage(tk.Frame):
 
         roundcomplete = tk.Label(
             self,
-            text='Round ' + str(roundnum) + ": Complete",
+            text=f"Round {roundnum}: Complete",
             font=("Courier", 18),
             foreground="white",
             background=background_grey
         ).pack()
 
         playagain_button = Button(self, 
-            text='Play Round ' + str(roundnum+1), 
+            text=f"Play Round {roundnum+1}", 
             bg='#ADEFD1',
-            fg='#00203F', 
+            fg='#00203F',
             borderless=1,
             activebackground='#6eb897',
             activeforeground='#FFFFFF',
-            command=lambda: Game.playagain()
+            command=lambda: master.playAgain()
         ).pack()
 
         exit_button = Button(self, 
-            text='Exit', 
+            text='Exit',
             bg='#ADEFD1',
-            fg='#00203F', 
+            fg='#00203F',
             borderless=1,
             activebackground='#6eb897',
             activeforeground='#FFFFFF',
@@ -298,11 +353,33 @@ class GameOverPage(tk.Frame):
             background=background_grey
         )
         gameover_title.pack()
+
+        stats = tk.Label(
+            self,
+            text=f"""
+You survived until Round {Game.level}
+Your best time was {Game.time}
+            """,
+            font=("Courier", 18),
+            foreground="white",
+            background=background_grey
+        )
+        stats.pack()
+
+        hidingplace_text = tk.Label(
+            self,
+            text=f"The hiding place was {Game.hidingplace}",
+            font=("Courier", 16, "bold"),
+            foreground="white",
+            background=background_grey
+        )
+        hidingplace_text.pack()
+
         playagain_button = Button(self, text='Play Again?', bg='#ADEFD1',
             fg='#00203F', borderless=1,
             activebackground='#6eb897',
             activeforeground='#FFFFFF',
-            command=lambda: master.switch_frame(MapPage)
+            command=lambda: master.playAgain(False)
             )
         playagain_button.pack()
 
