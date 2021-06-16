@@ -144,10 +144,14 @@ class App(tk.Tk):
         self._frame = new_frame
         self._frame.pack()
 
-    def playAgain(self, levelup=True):
+    def playAgain(self, levelup=True, reset=False):
         if levelup is True:
             Game.level += 1
             Game.time -= 5
+        if reset is True:
+            Game.level = 1
+            Game.time = 60
+        Game.searching = False
         Game.hidingplace = random.choice(list(locations.dict))
         locations.searched.clear()
         locations.seenclues.clear()
@@ -156,12 +160,13 @@ class App(tk.Tk):
         self.switch_frame(MapPage)
 
     def playerFinished(self, playerwon):
-        # End the timer before switching to the win page
-        self.timerrunning = False
-        if playerwon is True:
-            self.switch_frame(YouWinPage)
-        else:
-            self.switch_frame(GameOverPage)
+        # Player can only win if timer is still running
+        if self.timerrunning is not False:
+            self.timerrunning = False
+            if playerwon is True:
+                self.switch_frame(YouWinPage)
+            else:
+                self.switch_frame(GameOverPage)
 
     def countdown(self, remaining=None):
         if remaining is not None:
@@ -393,7 +398,7 @@ Your best time was {Game.time}
             fg='#00203F', borderless=1,
             activebackground='#6eb897',
             activeforeground='#FFFFFF',
-            command=lambda: master.playAgain(False)
+            command=lambda: master.playAgain(False, True)
             ).pack()
 
         # Exit button
