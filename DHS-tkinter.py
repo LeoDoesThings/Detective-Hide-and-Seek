@@ -13,9 +13,8 @@ class Locations():
     dict = {}
     # These all need to be addded outside of the initial dictionary set
     # because we're copying dictionary values to other keys
-    # This could be done in a more efficient way but this is more readable.
     dict["forest"] = [
-        "a muddy footprint on the ground...",
+        "a muddy footprint on the ground",
         "some dirt on the pavement",
         "a stick on the ground",
         "a leaf blowing past you",
@@ -91,7 +90,7 @@ class Game(tk.Tk):
     def getClue(self, location):
         location_str = str(location)
         # Remember that this location was searched
-        locations.searched.append(location_str)
+        locations.searched.append(Game.searching)
         # Chance for a clue is lower as you level up
         chance = random.randint(0, self.level)
         if chance == self.level:
@@ -212,6 +211,7 @@ class MapPage(tk.Frame):
     def __init__(self, master):
         tk.Frame.__init__(self, master)
 
+        print(Game.hidingplace)
         tk.Label(self, text="Map", font=('Courier', 54, "bold")).pack(side="top", fill="x", pady=5)
         forest = Button(self,
             text="Forest",
@@ -254,9 +254,6 @@ class MapPage(tk.Frame):
             isHidingPlace = Game.checkHidingPlace(location)
             if isHidingPlace == "searched":
                 print("You've searched this place!")
-            elif isHidingPlace is True:
-                Game.searching = True
-                master.switch_frame(SearchingPage)
             else:
                 Game.searching = location
                 master.switch_frame(SearchingPage)
@@ -281,18 +278,18 @@ class SearchingPage(tk.Frame):
 
         self.countdown(searchingtime)
 
-        if Game.searching is True:
+        if Game.searching == Game.hidingplace:
             waittime = random.randrange(4, searchingtime-1)
             self.after(waittime*1000, master.playerFinished, True)
         else:
-            self.clue = Game.getClue(Game.searching)
+            self.clue = Game.getClue(Game.hidingplace)
             self.after(searchingtime*1000, master.switch_frame, MapPage)
 
     def countdown(self, remaining=None):
         if remaining is not None:
             self.remaining = remaining
 
-        if self.remaining == 3 and Game.searching is not True:
+        if self.remaining == 3 and Game.searching != Game.hidingplace:
             if self.clue is False:
                 tk.Label(
                     self,
