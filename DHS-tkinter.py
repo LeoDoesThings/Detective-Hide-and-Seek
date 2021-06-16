@@ -67,7 +67,6 @@ class Locations():
 
     def randomClue(self, location):
         num = random.randrange(0, 5)
-        print("LOOK AT ME", location, num)
         return self.dict[location][num]
 
 locations = Locations()
@@ -96,12 +95,12 @@ class Game(tk.Tk):
         # Chance for a clue is lower as you level up
         chance = random.randint(0, self.level)
         if chance == self.level:
-        # Always show a clue the player hasn't seen before
+            # Always show a clue the player hasn't seen before
             while True:
                 clue = locations.randomClue(location_str)
                 if clue not in locations.seenclues:
                     break
-            self.seenclues.append(clue)
+            locations.seenclues.append(clue)
             return clue
         # Tell game that there is no clue
         return False
