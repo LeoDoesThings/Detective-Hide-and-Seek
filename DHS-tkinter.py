@@ -196,7 +196,9 @@ class StartPage(tk.Frame):
             font=('Courier', 54, "bold")
         )
         main_title.pack(side="top", pady=5)
-        start_button = Button(
+
+        # Start button
+        Button(
             self,
             text='Start',
             bg='#ADEFD1',
@@ -204,8 +206,47 @@ class StartPage(tk.Frame):
             activebackground='#6eb897',
             activeforeground='#FFFFFF',
             command=lambda: master.playAgain(False)
+        ).pack()
+
+        # How to Play button
+        Button(
+            self,
+            text='How to Play',
+            bg='#ADEFD1',
+            fg='#00203F', borderless=1,
+            activebackground='#6eb897',
+            activeforeground='#FFFFFF',
+            command=lambda: how_to_play.pack()
+        ).pack()
+
+        # Exit button
+        Button(self,
+            text='Exit',
+            bg='#ADEFD1',
+            fg='#00203F',
+            borderless=1,
+            activebackground='#6eb897',
+            activeforeground='#FFFFFF',
+            command=lambda: app.destroy()
+        ).pack()
+
+        how_to_play = tk.Label(
+            self,
+            text="""
+You are the Detective. You need to catch the criminal before he escapes!
+
+
+You'll have 60 seconds, otherwise the criminal is home free.
+
+
+The criminal might leave clues behind in certain locations that you'll have to
+find if you want to catch him in time.
+
+But don't get too confident, the criminal will learn from his mistakes and leave
+less and less clues as you keep catching him!
+            """,
+            font=('Courier', 16)
         )
-        start_button.pack(side="bottom", pady=30)
 
 class MapPage(tk.Frame):
     def __init__(self, master):
