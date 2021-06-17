@@ -70,7 +70,7 @@ class Locations():
 
 locations = Locations()
 
-class Game(tk.Tk):
+class Game():
     def __init__(self):
         self.level = 1
         self.time = 60
@@ -133,7 +133,6 @@ class App(tk.Tk):
 
         # Timer settings
         self.remaining = 0
-        self.timerrunning = False
         self.timerlabel = tk.Label(self, text="", width=10)
 
     def switch_frame(self, frame_class):
@@ -154,27 +153,21 @@ class App(tk.Tk):
         Game.hidingplace = random.choice(list(locations.dict))
         locations.searched.clear()
         locations.seenclues.clear()
-        self.timerrunning = True
         self.countdown(Game.time)
         self.switch_frame(MapPage)
 
     def playerFinished(self, playerwon):
         # Player can only win if timer is still running
-        if self.timerrunning is not False:
-            self.timerrunning = False
-            if playerwon is True:
-                self.switch_frame(YouWinPage)
-            else:
-                self.switch_frame(GameOverPage)
+        if self.remaining > 0 and playerwon is True:
+            self.switch_frame(YouWinPage)
+        else:
+            self.switch_frame(GameOverPage)
 
     def countdown(self, remaining=None):
         if remaining is not None:
             self.remaining = remaining
 
-        if self.timerrunning is False:
-            self.remaining = 0
-            self.timerlabel.pack_forget()
-        elif self.remaining <= 0:
+        if self.remaining <= 0:
             self.timerlabel.pack_forget()
             self.switch_frame(GameOverPage)
         else:
@@ -254,10 +247,12 @@ class MapPage(tk.Frame):
         tk.Frame.__init__(self, master)
 
         print(Game.hidingplace)
+        # Map title
         tk.Label(self,
             text="Map",
             font=('Courier', 54, "bold")
         ).pack(side="top", fill="x", pady=5)
+
         forest = Button(self,
             text="Forest",
             bg="#efcead",
@@ -320,15 +315,22 @@ class SearchingPage(tk.Frame):
         self.timerlabel = tk.Label(self, text="", width=10)
 
         searchingtime = random.randrange(8, 14)
-
         self.countdown(searchingtime)
 
+        # Check timer is still running before finishing the search
+        # otherwise it override the switch to GameOverPage
+        def finishSearch():
+            if master.remaining > 0:
+                master.switch_frame(MapPage)
+
         if Game.searching == Game.hidingplace:
+            # Must have a clue otherwise script returns an error sometimes
+            self.clue = False
             waittime = random.randrange(4, searchingtime-1)
             self.after(waittime*1000, master.playerFinished, True)
         else:
             self.clue = Game.getClue(Game.hidingplace)
-            self.after(searchingtime*1000, master.switch_frame, MapPage)
+            self.after(searchingtime*1000, finishSearch)
 
     def countdown(self, remaining=None):
         if remaining is not None:
