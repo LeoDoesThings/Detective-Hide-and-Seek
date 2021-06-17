@@ -242,8 +242,9 @@ You'll have 60 seconds, otherwise the criminal is home free.
 The criminal might leave clues behind in certain locations that you'll have to
 find if you want to catch him in time.
 
-But don't get too confident, the criminal will learn from his mistakes and leave
-less and less clues as you keep catching him!
+But don't get too confident!
+The criminal will learn from his mistakes and won't leave as many clues the
+next time you try to catch him.
             """,
             font=('Courier', 16)
         )
@@ -253,7 +254,10 @@ class MapPage(tk.Frame):
         tk.Frame.__init__(self, master)
 
         print(Game.hidingplace)
-        tk.Label(self, text="Map", font=('Courier', 54, "bold")).pack(side="top", fill="x", pady=5)
+        tk.Label(self,
+            text="Map",
+            font=('Courier', 54, "bold")
+        ).pack(side="top", fill="x", pady=5)
         forest = Button(self,
             text="Forest",
             bg="#efcead",
