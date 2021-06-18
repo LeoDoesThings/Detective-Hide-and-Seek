@@ -92,7 +92,7 @@ class Game():
         # Remember that this location was searched
         locations.searched.append(Game.searching)
         # Chance for a clue is lower as you level up
-        chance = random.randint(0, self.level)
+        chance = random.randint(4, self.level+4)
         if chance == self.level:
             # Always show a clue the player hasn't seen before
             while True:
