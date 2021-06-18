@@ -74,6 +74,7 @@ class Game():
     def __init__(self):
         self.level = 1
         self.time = 60
+        self.cluechance = 10
         # Randomly pick a hiding place
         self.hidingplace = random.choice(list(locations.dict))
 
@@ -92,8 +93,8 @@ class Game():
         # Remember that this location was searched
         locations.searched.append(Game.searching)
         # Chance for a clue is lower as you level up
-        chance = random.randint(4, self.level+4)
-        if chance == self.level:
+        chance = random.randint(self.cluechance, 10)
+        if chance == 10:
             # Always show a clue the player hasn't seen before
             while True:
                 clue = locations.randomClue(location_str)
@@ -135,6 +136,9 @@ class App(tk.Tk):
         self.remaining = 0
         self.timerlabel = tk.Label(self, text="", width=10)
 
+        # Must set this variable in __init__ before using
+        self.playerwon = None
+
     def switch_frame(self, frame_class):
         new_frame = frame_class(self)
         if self._frame is not None:
@@ -146,6 +150,8 @@ class App(tk.Tk):
         if levelup is True:
             Game.level += 1
             Game.time -= 5
+            if Game.cluechance > 1:
+                Game.cluechance -= 1
         if reset is True:
             Game.level = 1
             Game.time = 60
@@ -153,15 +159,17 @@ class App(tk.Tk):
         Game.hidingplace = random.choice(list(locations.dict))
         locations.searched.clear()
         locations.seenclues.clear()
+        self.playerwon = False
         self.countdown(Game.time)
         self.switch_frame(MapPage)
 
     def playerFinished(self, playerwon):
         # Player can only win if timer is still running
         if self.remaining > 0 and playerwon is True:
-            self.switch_frame(YouWinPage)
+            self.playerwon = True
+            self.remaining = 0
         else:
-            self.switch_frame(GameOverPage)
+            self.remaining = 0
 
     def countdown(self, remaining=None):
         if remaining is not None:
@@ -169,7 +177,10 @@ class App(tk.Tk):
 
         if self.remaining <= 0:
             self.timerlabel.pack_forget()
-            self.switch_frame(GameOverPage)
+            if self.playerwon is False:
+                self.switch_frame(GameOverPage)
+            else:
+                self.switch_frame(YouWinPage)
         else:
             self.timerlabel.pack(side="top", anchor="ne")
             self.timerlabel.configure(
