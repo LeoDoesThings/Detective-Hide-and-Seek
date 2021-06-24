@@ -84,8 +84,6 @@ class Game():
         location_str = str(location)
         if location_str in locations.searched:
             return "searched"
-        if location_str == self.hidingplace:
-            return True
         return False
 
     def getClue(self, location):
@@ -302,6 +300,8 @@ class MapPage(tk.Frame):
         garden.pack()
 
         def searchLocation(location):
+            # Check if location has been searched before switching to
+            # searching page
             isHidingPlace = Game.checkHidingPlace(location)
             if isHidingPlace == "searched":
                 print("You've searched this place!")
