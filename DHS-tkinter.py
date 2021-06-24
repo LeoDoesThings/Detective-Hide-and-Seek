@@ -115,11 +115,11 @@ class App(tk.Tk):
     def __init__(self):
         tk.Tk.__init__(self)
         # Set tkinter window settings
-        self['bg'] = background_grey
-        self.title('Detective Hide and Seek')
+        self["bg"] = background_grey
+        self.title("Detective Hide and Seek")
 
         # Set window size to 480p
-        self.geometry('853x480')
+        self.geometry("853x480")
         # Gets both half the screen width/height and window width/height
         positionRight = int(self.winfo_screenwidth()/3 - windowWidth/2)
         positionDown = int(self.winfo_screenheight()/3 - windowHeight/2)
@@ -183,7 +183,7 @@ class App(tk.Tk):
             self.timerlabel.pack(side="top", anchor="ne")
             self.timerlabel.configure(
                 text="Time: %d" % self.remaining,
-                font=('Courier', 24, "bold")
+                font=("Courier", 24, "bold")
             )
             self.remaining = self.remaining - 1
             self.after(1000, self.countdown)
@@ -195,40 +195,40 @@ class StartPage(tk.Frame):
         main_title = tk.Label(
             self,
             text="Detective Hide and Seek",
-            font=('Courier', 54, "bold")
+            font=("Courier", 54, "bold")
         )
         main_title.pack(side="top", pady=5)
 
         # Start button
         Button(
             self,
-            text='Start',
-            bg='#ADEFD1',
-            fg='#00203F', borderless=1,
-            activebackground='#6eb897',
-            activeforeground='#FFFFFF',
+            text="Start",
+            bg="#ADEFD1",
+            fg="#00203F", borderless=1,
+            activebackground="#6eb897",
+            activeforeground="#FFFFFF",
             command=lambda: master.playAgain(False)
         ).pack()
 
         # How to Play button
         Button(
             self,
-            text='How to Play',
-            bg='#ADEFD1',
-            fg='#00203F', borderless=1,
-            activebackground='#6eb897',
-            activeforeground='#FFFFFF',
+            text="How to Play",
+            bg="#ADEFD1",
+            fg="#00203F", borderless=1,
+            activebackground="#6eb897",
+            activeforeground="#FFFFFF",
             command=lambda: how_to_play.pack()
         ).pack()
 
         # Exit button
         Button(self,
-            text='Exit',
-            bg='#ADEFD1',
-            fg='#00203F',
+            text="Exit",
+            bg="#ADEFD1",
+            fg="#00203F",
             borderless=1,
-            activebackground='#6eb897',
-            activeforeground='#FFFFFF',
+            activebackground="#6eb897",
+            activeforeground="#FFFFFF",
             command=lambda: app.destroy()
         ).pack()
 
@@ -248,7 +248,7 @@ But don't get too confident!
 The criminal will learn from his mistakes and won't leave as many clues the
 next time you try to catch him.
             """,
-            font=('Courier', 16)
+            font=("Courier", 16)
         )
 
 class MapPage(tk.Frame):
@@ -259,7 +259,7 @@ class MapPage(tk.Frame):
         # Map title
         tk.Label(self,
             text="Map",
-            font=('Courier', 54, "bold")
+            font=("Courier", 54, "bold")
         ).pack(side="top", fill="x", pady=5)
 
         forest = Button(self,
@@ -316,7 +316,7 @@ class SearchingPage(tk.Frame):
         # Searching title message
         tk.Label(
             self,
-            text='Searching...',
+            text="Searching...",
             font=("Courier", 36),
             foreground="white",
             background=background_grey
@@ -352,20 +352,20 @@ class SearchingPage(tk.Frame):
                 tk.Label(
                     self,
                     text="You come up empty.",
-                    font=('Courier', 18)
+                    font=("Courier", 18)
                 ).pack(side="top", pady=5)
             else:
                 tk.Label(
                     self,
                     text=f"You notice {self.clue}",
-                    font=('Courier', 18)
+                    font=("Courier", 18)
                 ).pack(side="top", pady=5)
 
         if self.remaining <= 0:
             self.timerlabel.pack_forget()
         else:
             self.timerlabel.pack()
-            self.timerlabel.configure(text="%d" % self.remaining, font=('Courier', 24, "bold"))
+            self.timerlabel.configure(text="%d" % self.remaining, font=("Courier", 24, "bold"))
             self.remaining = self.remaining - 1
             self.after(1000, self.countdown)
 
@@ -377,7 +377,7 @@ class YouWinPage(tk.Frame):
         # You Win title message
         tk.Label(
             self,
-            text='You Win!',
+            text="You Win!",
             font=("Courier", 44),
             foreground="white",
             background=background_grey
@@ -395,22 +395,22 @@ class YouWinPage(tk.Frame):
         # Play again button
         Button(self,
             text=f"Play Round {roundnum+1}",
-            bg='#ADEFD1',
-            fg='#00203F',
+            bg="#ADEFD1",
+            fg="#00203F",
             borderless=1,
-            activebackground='#6eb897',
-            activeforeground='#FFFFFF',
+            activebackground="#6eb897",
+            activeforeground="#FFFFFF",
             command=lambda: master.playAgain()
         ).pack()
 
         # Exit button
         Button(self,
-            text='Exit',
-            bg='#ADEFD1',
-            fg='#00203F',
+            text="Exit",
+            bg="#ADEFD1",
+            fg="#00203F",
             borderless=1,
-            activebackground='#6eb897',
-            activeforeground='#FFFFFF',
+            activebackground="#6eb897",
+            activeforeground="#FFFFFF",
             command=lambda: app.destroy()
         ).pack()
 
@@ -421,7 +421,7 @@ class GameOverPage(tk.Frame):
         # Game over title
         tk.Label(
             self,
-            text='Game Over',
+            text="Game Over",
             font=("Courier", 44),
             foreground="white",
             background=background_grey
@@ -449,24 +449,23 @@ Your best time was {Game.time}
         ).pack()
 
         # Play again button
-        Button(self, text='Play Again?', bg='#ADEFD1',
-            fg='#00203F', borderless=1,
-            activebackground='#6eb897',
-            activeforeground='#FFFFFF',
+        Button(self, text="Play Again?", bg="#ADEFD1",
+            fg="#00203F", borderless=1,
+            activebackground="#6eb897",
+            activeforeground="#FFFFFF",
             command=lambda: master.playAgain(False, True)
             ).pack()
 
         # Exit button
         Button(self,
-            text='Exit',
-            bg='#ADEFD1',
-            fg='#00203F',
+            text="Exit",
+            bg="#ADEFD1",
+            fg="#00203F",
             borderless=1,
-            activebackground='#6eb897',
-            activeforeground='#FFFFFF',
+            activebackground="#6eb897",
+            activeforeground="#FFFFFF",
             command=lambda: app.destroy()
         ).pack()
 
-if __name__ == "__main__":
-    app = App()
-    app.mainloop()
+app = App()
+app.mainloop()
