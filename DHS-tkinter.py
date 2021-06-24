@@ -304,7 +304,12 @@ class MapPage(tk.Frame):
             # searching page
             isHidingPlace = Game.checkHidingPlace(location)
             if isHidingPlace == "searched":
-                print("You've searched this place!")
+                searched_label = tk.Label(self,
+                    text="You've searched this place!",
+                    font=("Courier", 16, "bold")
+                )
+                searched_label.pack(side="top", fill="x", pady=5)
+                self.after(2000, searched_label.pack_forget)
             else:
                 Game.searching = location
                 master.switch_frame(SearchingPage)
