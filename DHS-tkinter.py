@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import PhotoImage
 import random
 
 try:
@@ -80,12 +81,6 @@ class Game():
 
         self.searching = False
 
-    def checkHidingPlace(self, location):
-        location_str = str(location)
-        if location_str in locations.searched:
-            return "searched"
-        return False
-
     def getClue(self, location):
         location_str = str(location)
         # Remember that this location was searched
@@ -141,6 +136,7 @@ class App(tk.Tk):
         new_frame = frame_class(self)
         if self._frame is not None:
             self._frame.pack_forget()
+            self._frame.place_forget()
         self._frame = new_frame
         self._frame.pack()
 
@@ -255,64 +251,70 @@ class MapPage(tk.Frame):
     def __init__(self, master):
         tk.Frame.__init__(self, master)
 
+        def searchLocation(location):
+            Game.searching = location
+            master.switch_frame(SearchingPage)
+
         print(Game.hidingplace)
         # Map title
         tk.Label(self,
             text="Map",
             font=("Courier", 54, "bold")
-        ).pack(side="top", fill="x", pady=5)
+        ).grid(row=1, column=2)
 
-        forest = Button(self,
-            text="Forest",
-            bg="#efcead",
+        self.forest_image = PhotoImage(file="resources/img0.png")
+        forest = tk.Button(self,
+            image=self.forest_image,
+            borderwidth=0,
             command=lambda: searchLocation("forest")
         )
-        forest.pack()
-        park = Button(self,
-            text="Park",
-            bg="#efcead",
+        if "forest" not in locations.searched:
+            forest.grid(row=4, column=1)
+
+        self.park_image = PhotoImage(file="resources/img1.png")
+        park = tk.Button(self,
+            image=self.park_image,
+            borderwidth=0,
             command=lambda: searchLocation("park")
         )
-        park.pack()
-        cafe = Button(self,
-            text="Cafe",
-            bg="#efcead",
+        if "park" not in locations.searched:
+            park.grid(row=4, column=2)
+
+        self.cafe_image = PhotoImage(file="resources/img2.png")
+        cafe = tk.Button(self,
+            image=self.cafe_image,
+            borderwidth=0,
             command=lambda: searchLocation("cafe")
         )
-        cafe.pack()
-        house = Button(self,
-            text="House",
-            bg="#efcead",
+        if "cafe" not in locations.searched:
+            cafe.grid(row=4, column=3)
+
+        self.house_image = PhotoImage(file="resources/img3.png")
+        house = tk.Button(self,
+            image=self.house_image,
+            borderwidth=0,
             command=lambda: searchLocation("house")
         )
-        house.pack()
-        school = Button(self,
-            text="School",
-            bg="#efcead",
+        if "house" not in locations.searched:
+            house.grid(row=5, column=1)
+
+        self.school_image = PhotoImage(file="resources/img4.png")
+        school = tk.Button(self,
+            image=self.school_image,
+            borderwidth=0,
             command=lambda: searchLocation("school")
         )
-        school.pack()
-        garden = Button(self,
-            text="Garden",
-            bg="#efcead",
+        if "school" not in locations.searched:
+            school.grid(row=5, column=2)
+
+        self.garden_image = PhotoImage(file="resources/img5.png")
+        garden = tk.Button(self,
+            image=self.garden_image,
+            borderwidth=0,
             command=lambda: searchLocation("garden")
         )
-        garden.pack()
-
-        def searchLocation(location):
-            # Check if location has been searched before switching to
-            # searching page
-            isHidingPlace = Game.checkHidingPlace(location)
-            if isHidingPlace == "searched":
-                searched_label = tk.Label(self,
-                    text="You've searched this place!",
-                    font=("Courier", 16, "bold")
-                )
-                searched_label.pack(side="top", fill="x", pady=5)
-                self.after(2000, searched_label.pack_forget)
-            else:
-                Game.searching = location
-                master.switch_frame(SearchingPage)
+        if "garden" not in locations.searched:
+            garden.grid(row=5, column=3)
 
 class SearchingPage(tk.Frame):
     def __init__(self, master):
@@ -325,7 +327,7 @@ class SearchingPage(tk.Frame):
             font=("Courier", 36),
             foreground="white",
             background=background_grey
-        ).pack(anchor="center")
+        ).pack()
 
         self.remaining = 0
         self.timerlabel = tk.Label(self, text="", width=10)
