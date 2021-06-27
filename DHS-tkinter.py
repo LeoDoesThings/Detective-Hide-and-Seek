@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import PhotoImage
+import platform
 import random
 
 try:
@@ -106,6 +107,19 @@ windowWidth = 853
 windowHeight = 480
 background_grey = "#333"
 
+if platform.system() == "Windows":
+    h1 = 38
+    h2 = 26
+    h3 = 18
+    h4 = 14
+    h5 = 12
+else:
+    h1 = 54
+    h2 = 36
+    h3 = 24
+    h4 = 18
+    h5 = 16
+
 class App(tk.Tk):
     def __init__(self):
         tk.Tk.__init__(self)
@@ -179,7 +193,9 @@ class App(tk.Tk):
             self.timerlabel.pack(side="top", anchor="ne")
             self.timerlabel.configure(
                 text="Time: %d" % self.remaining,
-                font=("Courier", 24, "bold")
+                font=("Courier", h3, "bold"),
+                fg="#FFF",
+                bg=background_grey
             )
             self.remaining = self.remaining - 1
             self.after(1000, self.countdown)
@@ -191,7 +207,9 @@ class StartPage(tk.Frame):
         main_title = tk.Label(
             self,
             text="Detective Hide and Seek",
-            font=("Courier", 54, "bold")
+            font=("Courier", h1, "bold"),
+            fg="#FFF",
+            bg=background_grey
         )
         main_title.pack(side="top", pady=5)
 
@@ -244,7 +262,9 @@ But don't get too confident!
 The criminal will learn from his mistakes and won't leave as many clues the
 next time you try to catch him.
             """,
-            font=("Courier", 16)
+            font=("Courier", h5),
+            fg="#FFF",
+            bg=background_grey
         )
 
 class MapPage(tk.Frame):
@@ -259,13 +279,18 @@ class MapPage(tk.Frame):
         # Map title
         tk.Label(self,
             text="Map",
-            font=("Courier", 54, "bold")
+            font=("Courier", h1, "bold"),
+            borderwidth=0,
+            highlightthickness=0,
+            fg="#FFF",
+            bg=background_grey
         ).grid(row=1, column=2)
 
         self.forest_image = PhotoImage(file="resources/img0.png")
         forest = tk.Button(self,
             image=self.forest_image,
-            borderwidth=0,
+            highlightthickness=0,
+            bd=0,
             command=lambda: searchLocation("forest")
         )
         if "forest" not in locations.searched:
@@ -274,7 +299,8 @@ class MapPage(tk.Frame):
         self.park_image = PhotoImage(file="resources/img1.png")
         park = tk.Button(self,
             image=self.park_image,
-            borderwidth=0,
+            highlightthickness=0,
+            bd=0,
             command=lambda: searchLocation("park")
         )
         if "park" not in locations.searched:
@@ -283,7 +309,8 @@ class MapPage(tk.Frame):
         self.cafe_image = PhotoImage(file="resources/img2.png")
         cafe = tk.Button(self,
             image=self.cafe_image,
-            borderwidth=0,
+            highlightthickness=0,
+            bd=0,
             command=lambda: searchLocation("cafe")
         )
         if "cafe" not in locations.searched:
@@ -292,7 +319,8 @@ class MapPage(tk.Frame):
         self.house_image = PhotoImage(file="resources/img3.png")
         house = tk.Button(self,
             image=self.house_image,
-            borderwidth=0,
+            highlightthickness=0,
+            bd=0,
             command=lambda: searchLocation("house")
         )
         if "house" not in locations.searched:
@@ -301,7 +329,8 @@ class MapPage(tk.Frame):
         self.school_image = PhotoImage(file="resources/img4.png")
         school = tk.Button(self,
             image=self.school_image,
-            borderwidth=0,
+            highlightthickness=0,
+            bd=0,
             command=lambda: searchLocation("school")
         )
         if "school" not in locations.searched:
@@ -310,7 +339,8 @@ class MapPage(tk.Frame):
         self.garden_image = PhotoImage(file="resources/img5.png")
         garden = tk.Button(self,
             image=self.garden_image,
-            borderwidth=0,
+            highlightthickness=0,
+            bd=0,
             command=lambda: searchLocation("garden")
         )
         if "garden" not in locations.searched:
@@ -324,9 +354,11 @@ class SearchingPage(tk.Frame):
         tk.Label(
             self,
             text="Searching...",
-            font=("Courier", 36),
-            foreground="white",
-            background=background_grey
+            font=("Courier", h2),
+            borderwidth=0,
+            highlightthickness=0,
+            fg="#FFF",
+            bg=background_grey
         ).pack()
 
         self.remaining = 0
@@ -359,20 +391,35 @@ class SearchingPage(tk.Frame):
                 tk.Label(
                     self,
                     text="You come up empty.",
-                    font=("Courier", 18)
+                    font=("Courier", h4),
+                    borderwidth=0,
+                    highlightthickness=0,
+                    fg="#FFF",
+                    bg=background_grey
                 ).pack(side="top", pady=5)
             else:
                 tk.Label(
                     self,
                     text=f"You notice {self.clue}",
-                    font=("Courier", 18)
+                    font=("Courier", h4),
+                    borderwidth=0,
+                    highlightthickness=0,
+                    fg="#FFF",
+                    bg=background_grey
                 ).pack(side="top", pady=5)
 
         if self.remaining <= 0:
             self.timerlabel.pack_forget()
         else:
             self.timerlabel.pack()
-            self.timerlabel.configure(text="%d" % self.remaining, font=("Courier", 24, "bold"))
+            self.timerlabel.configure(
+                text="%d" % self.remaining,
+                font=("Courier", h3, "bold"),
+                fg="#FFF",
+                borderwidth=0,
+                highlightthickness=0,
+                bg=background_grey
+            )
             self.remaining = self.remaining - 1
             self.after(1000, self.countdown)
 
@@ -385,7 +432,7 @@ class YouWinPage(tk.Frame):
         tk.Label(
             self,
             text="You Win!",
-            font=("Courier", 44),
+            font=("Courier", h1, "bold"),
             foreground="white",
             background=background_grey
         ).pack()
@@ -394,7 +441,7 @@ class YouWinPage(tk.Frame):
         tk.Label(
             self,
             text=f"Round {roundnum}: Complete",
-            font=("Courier", 18),
+            font=("Courier", h4),
             foreground="white",
             background=background_grey
         ).pack()
@@ -429,7 +476,7 @@ class GameOverPage(tk.Frame):
         tk.Label(
             self,
             text="Game Over",
-            font=("Courier", 44),
+            font=("Courier", h1, "bold"),
             foreground="white",
             background=background_grey
         ).pack()
@@ -439,9 +486,9 @@ class GameOverPage(tk.Frame):
             self,
             text=f"""
 You survived until Round {Game.level}
-Your best time was {Game.time}
+Your best time was {Game.time} seconds
             """,
-            font=("Courier", 18),
+            font=("Courier", h4),
             foreground="white",
             background=background_grey
         ).pack()
@@ -450,7 +497,7 @@ Your best time was {Game.time}
         tk.Label(
             self,
             text=f"The hiding place was {Game.hidingplace}",
-            font=("Courier", 16, "bold"),
+            font=("Courier", h5, "bold"),
             foreground="white",
             background=background_grey
         ).pack()
