@@ -107,6 +107,8 @@ windowWidth = 853
 windowHeight = 480
 background_grey = "#333"
 
+# Windows font size is bigger by around 25% so make text smaller
+# if running on Windows
 if platform.system() == "Windows":
     h1 = 38
     h2 = 26
@@ -246,6 +248,7 @@ class StartPage(tk.Frame):
             command=lambda: app.destroy()
         ).pack()
 
+        # Brief description of how to play
         how_to_play = tk.Label(
             self,
             text="""
@@ -286,6 +289,7 @@ class MapPage(tk.Frame):
             bg=background_grey
         ).grid(row=1, column=2)
 
+        # Forest button
         self.forest_image = PhotoImage(file="resources/img0.png")
         forest = tk.Button(self,
             image=self.forest_image,
@@ -296,6 +300,7 @@ class MapPage(tk.Frame):
         if "forest" not in locations.searched:
             forest.grid(row=4, column=1)
 
+        # Park button
         self.park_image = PhotoImage(file="resources/img1.png")
         park = tk.Button(self,
             image=self.park_image,
@@ -306,6 +311,7 @@ class MapPage(tk.Frame):
         if "park" not in locations.searched:
             park.grid(row=4, column=2)
 
+        # Cafe button
         self.cafe_image = PhotoImage(file="resources/img2.png")
         cafe = tk.Button(self,
             image=self.cafe_image,
@@ -316,6 +322,7 @@ class MapPage(tk.Frame):
         if "cafe" not in locations.searched:
             cafe.grid(row=4, column=3)
 
+        # House button
         self.house_image = PhotoImage(file="resources/img3.png")
         house = tk.Button(self,
             image=self.house_image,
@@ -326,6 +333,7 @@ class MapPage(tk.Frame):
         if "house" not in locations.searched:
             house.grid(row=5, column=1)
 
+        # School button
         self.school_image = PhotoImage(file="resources/img4.png")
         school = tk.Button(self,
             image=self.school_image,
@@ -336,6 +344,7 @@ class MapPage(tk.Frame):
         if "school" not in locations.searched:
             school.grid(row=5, column=2)
 
+        # Garden button
         self.garden_image = PhotoImage(file="resources/img5.png")
         garden = tk.Button(self,
             image=self.garden_image,
@@ -374,11 +383,12 @@ class SearchingPage(tk.Frame):
                 master.switch_frame(MapPage)
 
         if Game.searching == Game.hidingplace:
-            # Must have a clue otherwise script returns an error sometimes
+            # Clue variable must have something otherwise script returns an error sometimes
             self.clue = False
             waittime = random.randrange(4, searchingtime-1)
             self.after(waittime*1000, master.playerFinished, True)
         else:
+            # Show a clue if the location is not the hiding place
             self.clue = Game.getClue(Game.hidingplace)
             self.after(searchingtime*1000, finishSearch)
 
