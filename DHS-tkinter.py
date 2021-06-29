@@ -263,16 +263,15 @@ You are the Detective. You need to catch the criminal before he escapes!
 You'll have 60 seconds, otherwise the criminal is home free.
 
 
-The criminal might leave clues behind in certain locations that you'll have to
-find if you want to catch him in time.
+The criminal might leave clues behind in certain locations that you'll have to find if you want to catch him in time.
 
 But don't get too confident!
-The criminal will learn from his mistakes and won't leave as many clues the
-next time you try to catch him.
+The criminal will learn from his mistakes and won't leave as many clues the next time you try to catch him.
             """,
             font=("Courier", h5),
             fg="#FFF",
-            bg=background_grey
+            bg=background_grey,
+            wraplength=windowWidth-80
         )
 
 
