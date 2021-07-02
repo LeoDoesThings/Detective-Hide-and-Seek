@@ -3,6 +3,7 @@ from tkinter import PhotoImage
 import platform
 import random
 
+# Tell user to install tkmacosx if they don't have it
 try:
     from tkmacosx import Button
 except ImportError:
@@ -153,6 +154,7 @@ class App(tk.Tk):
         self.playerwon = None
 
     def switch_frame(self, frame_class):
+        # Forget the old frame and pack the new frame
         new_frame = frame_class(self)
         if self._frame is not None:
             self._frame.pack_forget()
@@ -162,13 +164,17 @@ class App(tk.Tk):
 
     def playAgain(self, levelup=True, reset=False):
         if levelup is True:
+            # Player level up
             Game.level += 1
             Game.time -= 5
             if Game.cluechance > 1:
+                # Lower chances of clue
                 Game.cluechance -= 1
         if reset is True:
+            # Do this for full game reset
             Game.level = 1
             Game.time = 60
+        # Reset game ready for next round
         Game.searching = False
         Game.hidingplace = random.choice(list(locations.dict))
         locations.searched.clear()
@@ -189,6 +195,7 @@ class App(tk.Tk):
         if remaining is not None:
             self.remaining = remaining
 
+        # The player can still win if they get it just in time before 0
         if self.remaining <= 0:
             self.timerlabel.pack_forget()
             if self.playerwon is False:
@@ -196,6 +203,7 @@ class App(tk.Tk):
             else:
                 self.switch_frame(YouWinPage)
         else:
+            # Update timer every second with the new second value
             self.timerlabel.pack(side="top", anchor="ne")
             self.timerlabel.configure(
                 text="Time: %d" % self.remaining,
@@ -218,43 +226,28 @@ class StartPage(tk.Frame):
             fg="#FFF",
             bg=background_grey
         )
-        main_title.pack(side="top", pady=5)
+        main_title.grid(column=1, columnspan=2, pady=10)
 
         # Start button
-        Button(
-            self,
-            text="Start",
-            bg="#ADEFD1",
-            fg="#00203F", borderless=1,
-            activebackground="#6eb897",
-            activeforeground="#FFFFFF",
-            command=lambda: master.playAgain(False)
-        ).pack()
-
-        # How to Play button
-        Button(
-            self,
-            text="How to Play",
-            bg="#ADEFD1",
-            fg="#00203F", borderless=1,
-            activebackground="#6eb897",
-            activeforeground="#FFFFFF",
-            command=lambda: how_to_play.pack()
-        ).pack()
+        self.start_image = PhotoImage(file="resources/start.png")
+        tk.Button(self,
+                  image=self.start_image,
+                  highlightthickness=0,
+                  bd=0,
+                  command=lambda: master.playAgain(False)
+                  ).grid(row=2, column=1, rowspan=2, pady=120)
 
         # Exit button
-        Button(self,
-               text="Exit",
-               bg="#ADEFD1",
-               fg="#00203F",
-               borderless=1,
-               activebackground="#6eb897",
-               activeforeground="#FFFFFF",
-               command=lambda: app.destroy()
-               ).pack()
+        self.exit_image = PhotoImage(file="resources/exit.png")
+        tk.Button(self,
+                  image=self.exit_image,
+                  highlightthickness=0,
+                  bd=0,
+                  command=lambda: app.destroy()
+                  ).grid(row=3, column=1)
 
         # Brief description of how to play
-        how_to_play = tk.Label(
+        tk.Label(
             self,
             text="""
 You are the Detective. You need to catch the criminal before he escapes!
@@ -271,14 +264,24 @@ The criminal will learn from his mistakes and won't leave as many clues the next
             font=("Courier", h5),
             fg="#FFF",
             bg=background_grey,
-            wraplength=windowWidth-80
-        )
+            wraplength=windowWidth-300
+        ).grid(row=2, column=2, rowspan=3, pady=40)
+
+        tk.Label(
+            self,
+            text="Apple Color Emoji are Copyright (c) Apple Inc.",
+            font=("Courier", 10),
+            fg="#FFF",
+            bg=background_grey,
+        ).grid(row=5, column=2, sticky="se")
 
 
 class MapPage(tk.Frame):
     def __init__(self, master):
         tk.Frame.__init__(self, master)
 
+        # Save the location being searched before switching to the
+        # searching page
         def searchLocation(location):
             Game.searching = location
             master.switch_frame(SearchingPage)
@@ -379,6 +382,7 @@ class SearchingPage(tk.Frame):
         self.remaining = 0
         self.timerlabel = tk.Label(self, text="", width=10)
 
+        # Start the countdown with random searching time
         searchingtime = random.randrange(8, 14)
         self.countdown(searchingtime)
 
@@ -403,6 +407,7 @@ class SearchingPage(tk.Frame):
             self.remaining = remaining
 
         if self.remaining == 3 and Game.searching != Game.hidingplace:
+            # Either show a clue or tell user there is no clue
             if self.clue is False:
                 tk.Label(
                     self,
@@ -427,6 +432,7 @@ class SearchingPage(tk.Frame):
         if self.remaining <= 0:
             self.timerlabel.pack_forget()
         else:
+            # Update the timer every second
             self.timerlabel.pack()
             self.timerlabel.configure(
                 text="%d" % self.remaining,
