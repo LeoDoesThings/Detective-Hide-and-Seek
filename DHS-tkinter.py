@@ -119,28 +119,25 @@ if platform.system() == "Windows":
     h3 = 18
     h4 = 14
     h5 = 12
+    h6 = 8
 else:
     h1 = 54
     h2 = 36
     h3 = 24
     h4 = 18
     h5 = 16
+    h6 = 10
 
 
 class App(tk.Tk):
     def __init__(self):
         tk.Tk.__init__(self)
         # Set tkinter window settings
-        self["bg"] = background_grey
         self.title("Detective Hide and Seek")
+        self.configure(bg=background_grey)
 
         # Set window size to 480p
         self.geometry("853x480")
-        # Gets both half the screen width/height and window width/height
-        positionRight = int(self.winfo_screenwidth()/3 - windowWidth/2)
-        positionDown = int(self.winfo_screenheight()/3 - windowHeight/2)
-        # Positions the window in the center of the screen
-        self.geometry("+{}+{}".format(positionRight, positionDown))
 
         # Start the game on the starting page
         self._frame = None
@@ -217,7 +214,7 @@ class App(tk.Tk):
 
 class StartPage(tk.Frame):
     def __init__(self, master):
-        tk.Frame.__init__(self, master)
+        tk.Frame.__init__(self, master, bg=background_grey)
 
         main_title = tk.Label(
             self,
@@ -270,15 +267,15 @@ The criminal will learn from his mistakes and won't leave as many clues the next
         tk.Label(
             self,
             text="Apple Color Emoji are Copyright (c) Apple Inc.",
-            font=("Courier", 10),
+            font=("Courier", h6),
             fg="#FFF",
             bg=background_grey,
-        ).grid(row=5, column=2, sticky="se")
+        ).grid(row=4, column=2, sticky="se")
 
 
 class MapPage(tk.Frame):
     def __init__(self, master):
-        tk.Frame.__init__(self, master)
+        tk.Frame.__init__(self, master, bg=background_grey)
 
         # Save the location being searched before switching to the
         # searching page
@@ -366,7 +363,7 @@ class MapPage(tk.Frame):
 
 class SearchingPage(tk.Frame):
     def __init__(self, master):
-        tk.Frame.__init__(self, master)
+        tk.Frame.__init__(self, master, bg=background_grey)
 
         # Searching title message
         tk.Label(
@@ -448,7 +445,7 @@ class SearchingPage(tk.Frame):
 
 class YouWinPage(tk.Frame):
     def __init__(self, master):
-        tk.Frame.__init__(self, master)
+        tk.Frame.__init__(self, master, bg=background_grey)
 
         roundnum = Game.level
         # You Win title message
@@ -494,7 +491,7 @@ class YouWinPage(tk.Frame):
 
 class GameOverPage(tk.Frame):
     def __init__(self, master):
-        tk.Frame.__init__(self, master)
+        tk.Frame.__init__(self, master, bg=background_grey)
 
         # Game over title
         tk.Label(
@@ -547,4 +544,5 @@ Your best time was {Game.time} seconds
 
 
 app = App()
+app.eval('tk::PlaceWindow . center')
 app.mainloop()
