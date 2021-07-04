@@ -184,9 +184,7 @@ class App(tk.Tk):
         # Player can only win if timer is still running
         if self.remaining > 0 and playerwon is True:
             self.playerwon = True
-            self.remaining = 0
-        else:
-            self.remaining = 0
+        self.remaining = 0
 
     def countdown(self, remaining=None):
         if remaining is not None:
