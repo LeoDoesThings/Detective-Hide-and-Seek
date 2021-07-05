@@ -3,15 +3,6 @@ from tkinter import PhotoImage
 import platform
 import random
 
-# Tell user to install tkmacosx if they don't have it
-try:
-    from tkmacosx import Button
-except ImportError:
-    import sys
-    sys.exit("""You need tkmacosx!
-                install it from https://pypi.org/project/tkmacosx/
-                or run pip install tkmacosx.""")
-
 
 class Locations():
     dict = {}
@@ -453,9 +444,9 @@ class YouWinPage(tk.Frame):
             font=("Courier", h1, "bold"),
             foreground="white",
             background=background_grey
-        ).pack()
+        ).pack(pady=(40, 0))
 
-        # Round compelete message
+        # Round complete message
         tk.Label(
             self,
             text=f"Round {roundnum}: Complete",
@@ -464,28 +455,23 @@ class YouWinPage(tk.Frame):
             background=background_grey
         ).pack()
 
-        # Play again button
-        Button(self,
-               text=f"Play Round {roundnum+1}",
-               bg="#ADEFD1",
-               fg="#00203F",
-               borderless=1,
-               activebackground="#6eb897",
-               activeforeground="#FFFFFF",
-               command=lambda: master.playAgain()
-               ).pack()
-
         # Exit button
-        Button(self,
-               text="Exit",
-               bg="#ADEFD1",
-               fg="#00203F",
-               borderless=1,
-               activebackground="#6eb897",
-               activeforeground="#FFFFFF",
-               command=lambda: app.destroy()
-               ).pack()
+        self.exit_image = PhotoImage(file="resources/exit2.png")
+        tk.Button(self,
+                  image=self.exit_image,
+                  highlightthickness=0,
+                  bd=0,
+                  command=lambda: app.destroy()
+                  ).pack(side="left", pady=80)
 
+        # Play next round button
+        self.nextround_image = PhotoImage(file=f"resources/playround{roundnum+1}.png")
+        tk.Button(self,
+                  image=self.nextround_image,
+                  highlightthickness=0,
+                  bd=0,
+                  command=lambda: master.playAgain()
+                  ).pack(side="left")
 
 class GameOverPage(tk.Frame):
     def __init__(self, master):
@@ -521,24 +507,23 @@ Your best time was {Game.time} seconds
             background=background_grey
         ).pack()
 
-        # Play again button
-        Button(self, text="Play Again?", bg="#ADEFD1",
-               fg="#00203F", borderless=1,
-               activebackground="#6eb897",
-               activeforeground="#FFFFFF",
-               command=lambda: master.playAgain(False, True)
-               ).pack()
-
         # Exit button
-        Button(self,
-               text="Exit",
-               bg="#ADEFD1",
-               fg="#00203F",
-               borderless=1,
-               activebackground="#6eb897",
-               activeforeground="#FFFFFF",
-               command=lambda: app.destroy()
-               ).pack()
+        self.exit_image = PhotoImage(file="resources/exit2.png")
+        tk.Button(self,
+                  image=self.exit_image,
+                  highlightthickness=0,
+                  bd=0,
+                  command=lambda: app.destroy()
+                  ).pack(side="left", pady=80)
+
+        # Play next round button
+        self.playagain_image = PhotoImage(file="resources/playagain.png")
+        tk.Button(self,
+                  image=self.playagain_image,
+                  highlightthickness=0,
+                  bd=0,
+                  command=lambda: master.playAgain(False, True)
+                  ).pack(side="left")
 
 
 app = App()
