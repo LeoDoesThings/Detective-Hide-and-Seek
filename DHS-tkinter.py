@@ -444,16 +444,18 @@ class YouWinPage(tk.Frame):
             font=("Courier", h1, "bold"),
             foreground="white",
             background=background_grey
-        ).pack(pady=(40, 0))
+        ).pack(pady=(30, 0))
 
-        # Round complete message
-        tk.Label(
-            self,
-            text=f"Round {roundnum}: Complete",
-            font=("Courier", h4),
-            foreground="white",
-            background=background_grey
-        ).pack()
+        # For every round completed, pack a label saying it has been completed
+        for iroundnum in range(1, roundnum + 1):
+            # Round complete message
+            tk.Label(
+                self,
+                text=f"Round {iroundnum}: Complete",
+                font=("Courier", h4),
+                foreground="white",
+                background=background_grey
+            ).pack()
 
         # Exit button
         self.exit_image = PhotoImage(file="resources/exit2.png")
