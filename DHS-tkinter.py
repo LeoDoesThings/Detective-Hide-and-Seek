@@ -395,7 +395,7 @@ class SearchingPage(tk.Frame):
         if self.remaining == 3 and Game.searching != Game.hidingplace:
             # Either show a clue or tell user there is no clue
             if self.clue is False:
-                tk.Label(
+                clue_label = tk.Label(
                     self,
                     text="You come up empty.",
                     font=("Courier", h4),
@@ -403,9 +403,9 @@ class SearchingPage(tk.Frame):
                     highlightthickness=0,
                     fg="#FFF",
                     bg=background_grey
-                ).pack(side="top", pady=5)
+                )
             else:
-                tk.Label(
+                clue_label = tk.Label(
                     self,
                     text=f"You notice {self.clue}",
                     font=("Courier", h4),
@@ -413,7 +413,8 @@ class SearchingPage(tk.Frame):
                     highlightthickness=0,
                     fg="#FFF",
                     bg=background_grey
-                ).pack(side="top", pady=5)
+                )
+            clue_label.pack(pady=5)
 
         if self.remaining <= 0:
             self.timerlabel.pack_forget()
@@ -464,16 +465,19 @@ class YouWinPage(tk.Frame):
                   highlightthickness=0,
                   bd=0,
                   command=lambda: app.destroy()
-                  ).pack(side="left", pady=80)
+                  ).pack(side="left", pady=100)
 
         # Play next round button
-        self.nextround_image = PhotoImage(file=f"resources/playround{roundnum+1}.png")
+        self.nextround_image = PhotoImage(
+            file=f"resources/playround{roundnum+1}.png"
+        )
         tk.Button(self,
                   image=self.nextround_image,
                   highlightthickness=0,
                   bd=0,
                   command=lambda: master.playAgain()
                   ).pack(side="left")
+
 
 class GameOverPage(tk.Frame):
     def __init__(self, master):
