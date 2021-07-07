@@ -28,30 +28,30 @@ class Locations():
         "a coffee cup on the ground",
         "a lid on the ground",
         "some liquid on the ground",
-        "some drops on the ground",
-        dict["forest"][4]
+        "a scent of coffee in the air",
+        "a wallet on the ground"
     ]
 
     dict["house"] = [
         "a bag on the ground",
-        "a wallet on the ground",
+        "a piece of silverware on the ground",
         "a book on the ground",
         "an HP laptop charger on the ground",
-        dict["cafe"][3]
+        dict["cafe"][2]
     ]
 
     dict["school"] = [
         dict["house"][0],
-        dict["house"][1],
+        dict["cafe"][4],
         dict["house"][2],
         dict["house"][4],
-        dict["cafe"][2]
+        dict["cafe"][3]
     ]
 
     dict["garden"] = [
         dict["forest"][1],
         dict["forest"][2],
-        dict["forest"][3],
+        dict["park"][0],
         dict["park"][1],
         dict["cafe"][2]
     ]
