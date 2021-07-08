@@ -4,7 +4,7 @@ import platform
 import random
 
 
-class Locations():
+class Locations:
     dict = {}
     # These all need to be addded outside of the initial dictionary set
     # because we're copying dictionary values to other keys
@@ -13,7 +13,7 @@ class Locations():
         "some dirt on the pavement",
         "a stick on the ground",
         "a leaf blowing past you",
-        "a shoelace on the ground"
+        "a shoelace on the ground",
     ]
 
     dict["park"] = [
@@ -21,7 +21,7 @@ class Locations():
         "some gardening gloves on the ground",
         dict["forest"][1],
         dict["forest"][2],
-        dict["forest"][4]
+        dict["forest"][4],
     ]
 
     dict["cafe"] = [
@@ -29,7 +29,7 @@ class Locations():
         "a lid on the ground",
         "some liquid on the ground",
         "a scent of coffee in the air",
-        "a wallet on the ground"
+        "a wallet on the ground",
     ]
 
     dict["house"] = [
@@ -37,7 +37,7 @@ class Locations():
         "a piece of silverware on the ground",
         "a book on the ground",
         "an HP laptop charger on the ground",
-        dict["cafe"][2]
+        dict["cafe"][2],
     ]
 
     dict["school"] = [
@@ -45,7 +45,7 @@ class Locations():
         dict["cafe"][4],
         dict["house"][2],
         dict["house"][4],
-        dict["cafe"][3]
+        dict["cafe"][3],
     ]
 
     dict["garden"] = [
@@ -53,7 +53,7 @@ class Locations():
         dict["forest"][2],
         dict["park"][0],
         dict["park"][1],
-        dict["cafe"][2]
+        dict["cafe"][2],
     ]
 
     searched = []
@@ -67,7 +67,7 @@ class Locations():
 locations = Locations()
 
 
-class Game():
+class Game:
     def __init__(self):
         self.level = 1
         self.time = 60
@@ -195,7 +195,7 @@ class App(tk.Tk):
                 text="Time: %d" % self.remaining,
                 font=("Courier", h3, "bold"),
                 fg="#FFF",
-                bg=background_grey
+                bg=background_grey,
             )
             self.remaining = self.remaining - 1
             self.after(1000, self.countdown)
@@ -210,27 +210,29 @@ class StartPage(tk.Frame):
             text="Detective Hide and Seek",
             font=("Courier", h1, "bold"),
             fg="#FFF",
-            bg=background_grey
+            bg=background_grey,
         )
         main_title.grid(column=1, columnspan=2, pady=10)
 
         # Start button
         self.start_image = PhotoImage(file="resources/start.png")
-        tk.Button(self,
-                  image=self.start_image,
-                  highlightthickness=0,
-                  bd=0,
-                  command=lambda: master.playAgain(False)
-                  ).grid(row=2, column=1, rowspan=2, pady=120)
+        tk.Button(
+            self,
+            image=self.start_image,
+            highlightthickness=0,
+            bd=0,
+            command=lambda: master.playAgain(False),
+        ).grid(row=2, column=1, rowspan=2, pady=120)
 
         # Exit button
         self.exit_image = PhotoImage(file="resources/exit.png")
-        tk.Button(self,
-                  image=self.exit_image,
-                  highlightthickness=0,
-                  bd=0,
-                  command=lambda: app.destroy()
-                  ).grid(row=3, column=1)
+        tk.Button(
+            self,
+            image=self.exit_image,
+            highlightthickness=0,
+            bd=0,
+            command=lambda: app.destroy(),
+        ).grid(row=3, column=1)
 
         # Brief description of how to play
         tk.Label(
@@ -250,7 +252,7 @@ The criminal will learn from his mistakes and won't leave as many clues the next
             font=("Courier", h5),
             fg="#FFF",
             bg=background_grey,
-            wraplength=windowWidth-300
+            wraplength=windowWidth - 300,
         ).grid(row=2, column=2, rowspan=3, pady=40)
 
         tk.Label(
@@ -274,78 +276,85 @@ class MapPage(tk.Frame):
 
         print(Game.hidingplace)
         # Map title
-        tk.Label(self,
-                 text="Map",
-                 font=("Courier", h1, "bold"),
-                 borderwidth=0,
-                 highlightthickness=0,
-                 fg="#FFF",
-                 bg=background_grey
-                 ).grid(row=1, column=2)
+        tk.Label(
+            self,
+            text="Map",
+            font=("Courier", h1, "bold"),
+            borderwidth=0,
+            highlightthickness=0,
+            fg="#FFF",
+            bg=background_grey,
+        ).grid(row=1, column=2)
 
         # Forest button
         self.forest_image = PhotoImage(file="resources/img0.png")
-        forest = tk.Button(self,
-                           image=self.forest_image,
-                           highlightthickness=0,
-                           bd=0,
-                           command=lambda: searchLocation("forest")
-                           )
+        forest = tk.Button(
+            self,
+            image=self.forest_image,
+            highlightthickness=0,
+            bd=0,
+            command=lambda: searchLocation("forest"),
+        )
         if "forest" not in locations.searched:
             forest.grid(row=4, column=1)
 
         # Park button
         self.park_image = PhotoImage(file="resources/img1.png")
-        park = tk.Button(self,
-                         image=self.park_image,
-                         highlightthickness=0,
-                         bd=0,
-                         command=lambda: searchLocation("park")
-                         )
+        park = tk.Button(
+            self,
+            image=self.park_image,
+            highlightthickness=0,
+            bd=0,
+            command=lambda: searchLocation("park"),
+        )
         if "park" not in locations.searched:
             park.grid(row=4, column=2)
 
         # Cafe button
         self.cafe_image = PhotoImage(file="resources/img2.png")
-        cafe = tk.Button(self,
-                         image=self.cafe_image,
-                         highlightthickness=0,
-                         bd=0,
-                         command=lambda: searchLocation("cafe")
-                         )
+        cafe = tk.Button(
+            self,
+            image=self.cafe_image,
+            highlightthickness=0,
+            bd=0,
+            command=lambda: searchLocation("cafe"),
+        )
         if "cafe" not in locations.searched:
             cafe.grid(row=4, column=3)
 
         # House button
         self.house_image = PhotoImage(file="resources/img3.png")
-        house = tk.Button(self,
-                          image=self.house_image,
-                          highlightthickness=0,
-                          bd=0,
-                          command=lambda: searchLocation("house")
-                          )
+        house = tk.Button(
+            self,
+            image=self.house_image,
+            highlightthickness=0,
+            bd=0,
+            command=lambda: searchLocation("house"),
+        )
         if "house" not in locations.searched:
             house.grid(row=5, column=1)
 
         # School button
         self.school_image = PhotoImage(file="resources/img4.png")
-        school = tk.Button(self,
-                           image=self.school_image,
-                           highlightthickness=0,
-                           bd=0,
-                           command=lambda: searchLocation("school")
-                           )
+        school = tk.Button(
+            self,
+            image=self.school_image,
+            highlightthickness=0,
+            bd=0,
+            command=lambda: searchLocation("school"),
+        )
         if "school" not in locations.searched:
             school.grid(row=5, column=2)
 
         # Garden button
         self.garden_image = PhotoImage(file="resources/img5.png")
-        garden = tk.Button(self,
-                           image=self.garden_image,
-                           highlightthickness=0,
-                           bd=0,
-                           command=lambda: searchLocation("garden")
-                           )
+        garden = tk.Button(
+            self,
+            image=self.garden_image,
+            highlightthickness=0,
+            bd=0,
+            command=lambda: searchLocation("garden"),
+        )
         if "garden" not in locations.searched:
             garden.grid(row=5, column=3)
 
@@ -362,7 +371,7 @@ class SearchingPage(tk.Frame):
             borderwidth=0,
             highlightthickness=0,
             fg="#FFF",
-            bg=background_grey
+            bg=background_grey,
         ).pack()
 
         self.remaining = 0
@@ -381,12 +390,12 @@ class SearchingPage(tk.Frame):
         if Game.searching == Game.hidingplace:
             # Clue variable must have something otherwise script returns an error sometimes
             self.clue = False
-            waittime = random.randrange(4, searchingtime-1)
-            self.after(waittime*1000, master.playerFinished, True)
+            waittime = random.randrange(4, searchingtime - 1)
+            self.after(waittime * 1000, master.playerFinished, True)
         else:
             # Show a clue if the location is not the hiding place
             self.clue = Game.getClue(Game.hidingplace)
-            self.after(searchingtime*1000, finishSearch)
+            self.after(searchingtime * 1000, finishSearch)
 
     def countdown(self, remaining=None):
         if remaining is not None:
@@ -402,7 +411,7 @@ class SearchingPage(tk.Frame):
                     borderwidth=0,
                     highlightthickness=0,
                     fg="#FFF",
-                    bg=background_grey
+                    bg=background_grey,
                 )
             else:
                 clue_label = tk.Label(
@@ -412,7 +421,7 @@ class SearchingPage(tk.Frame):
                     borderwidth=0,
                     highlightthickness=0,
                     fg="#FFF",
-                    bg=background_grey
+                    bg=background_grey,
                 )
             clue_label.pack(pady=5)
 
@@ -427,7 +436,7 @@ class SearchingPage(tk.Frame):
                 fg="#FFF",
                 borderwidth=0,
                 highlightthickness=0,
-                bg=background_grey
+                bg=background_grey,
             )
             self.remaining = self.remaining - 1
             self.after(1000, self.countdown)
@@ -444,7 +453,7 @@ class YouWinPage(tk.Frame):
             text="You Win!",
             font=("Courier", h1, "bold"),
             foreground="white",
-            background=background_grey
+            background=background_grey,
         ).pack(pady=(30, 0))
 
         # For every round completed, pack a label saying it has been completed
@@ -455,28 +464,28 @@ class YouWinPage(tk.Frame):
                 text=f"Round {iroundnum}: Complete",
                 font=("Courier", h4),
                 foreground="white",
-                background=background_grey
+                background=background_grey,
             ).pack()
 
         # Exit button
         self.exit_image = PhotoImage(file="resources/exit2.png")
-        tk.Button(self,
-                  image=self.exit_image,
-                  highlightthickness=0,
-                  bd=0,
-                  command=lambda: app.destroy()
-                  ).pack(side="left", pady=100)
+        tk.Button(
+            self,
+            image=self.exit_image,
+            highlightthickness=0,
+            bd=0,
+            command=lambda: app.destroy(),
+        ).pack(side="left", pady=100)
 
         # Play next round button
-        self.nextround_image = PhotoImage(
-            file=f"resources/playround{roundnum+1}.png"
-        )
-        tk.Button(self,
-                  image=self.nextround_image,
-                  highlightthickness=0,
-                  bd=0,
-                  command=lambda: master.playAgain()
-                  ).pack(side="left")
+        self.nextround_image = PhotoImage(file=f"resources/playround{roundnum+1}.png")
+        tk.Button(
+            self,
+            image=self.nextround_image,
+            highlightthickness=0,
+            bd=0,
+            command=lambda: master.playAgain(),
+        ).pack(side="left")
 
 
 class GameOverPage(tk.Frame):
@@ -489,7 +498,7 @@ class GameOverPage(tk.Frame):
             text="Game Over",
             font=("Courier", h1, "bold"),
             foreground="white",
-            background=background_grey
+            background=background_grey,
         ).pack()
 
         # User stats label
@@ -501,7 +510,7 @@ Your best time was {Game.time} seconds
             """,
             font=("Courier", h4),
             foreground="white",
-            background=background_grey
+            background=background_grey,
         ).pack()
 
         # Hiding place message
@@ -510,28 +519,30 @@ Your best time was {Game.time} seconds
             text=f"The hiding place was {Game.hidingplace}",
             font=("Courier", h5, "bold"),
             foreground="white",
-            background=background_grey
+            background=background_grey,
         ).pack()
 
         # Exit button
         self.exit_image = PhotoImage(file="resources/exit2.png")
-        tk.Button(self,
-                  image=self.exit_image,
-                  highlightthickness=0,
-                  bd=0,
-                  command=lambda: app.destroy()
-                  ).pack(side="left", pady=80)
+        tk.Button(
+            self,
+            image=self.exit_image,
+            highlightthickness=0,
+            bd=0,
+            command=lambda: app.destroy(),
+        ).pack(side="left", pady=80)
 
         # Play next round button
         self.playagain_image = PhotoImage(file="resources/playagain.png")
-        tk.Button(self,
-                  image=self.playagain_image,
-                  highlightthickness=0,
-                  bd=0,
-                  command=lambda: master.playAgain(False, True)
-                  ).pack(side="left")
+        tk.Button(
+            self,
+            image=self.playagain_image,
+            highlightthickness=0,
+            bd=0,
+            command=lambda: master.playAgain(False, True),
+        ).pack(side="left")
 
 
 app = App()
-app.eval('tk::PlaceWindow . center')
+app.eval("tk::PlaceWindow . center")
 app.mainloop()
